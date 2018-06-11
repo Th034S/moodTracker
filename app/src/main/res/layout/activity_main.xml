@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".controller.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,14 +18,23 @@
         android:background="@color/light_sage" />
 
     <ImageView
+        android:id="@+id/imageView_super_happy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:layout_margin="5dp"
-        android:src="@drawable/smiley_super_happy"/>
+        android:src="@drawable/smiley_super_happy" />
 
     <ImageView
+        android:id="@+id/imageView_happy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/smiley_happy"/>
+    <ImageView
+        android:id="@+id/imageView_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -34,6 +43,7 @@
         android:src="@drawable/smiley_normal"/>
 
     <ImageView
+        android:id="@+id/imageView_disappointed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -42,6 +52,7 @@
         android:src="@drawable/smiley_disappointed"/>
 
     <ImageView
+        android:id="@+id/imageView_sad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
