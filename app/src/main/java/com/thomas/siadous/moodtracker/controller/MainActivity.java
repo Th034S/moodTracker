@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.thomas.siadous.moodtracker.R;
 
+import java.util.ArrayList;
+
 // MainActivity class, first activity launched
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +25,19 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageViewSmiley = findViewById(R.id.imageView_happy);
 
         gestureDetector = new SwipeGestureDetector(this);
+
+        //an ArrayList to store the smiley imageView and background
+        ArrayList<Integer> imageList = new ArrayList<>();
+        imageList.add(0, R.drawable.smiley_super_happy);
+        imageList.add(1, R.color.banana_yellow);
+        imageList.add(2, R.drawable.smiley_happy);
+        imageList.add(3, R.color.light_sage);
+        imageList.add(4, R.drawable.smiley_normal);
+        imageList.add(5, R.color.cornflower_blue_65);
+        imageList.add(6, R.drawable.smiley_disappointed);
+        imageList.add(7, R.color.warm_grey);
+        imageList.add(8, R.drawable.smiley_sad);
+        imageList.add(9, R.color.faded_red);
 
 
     }
