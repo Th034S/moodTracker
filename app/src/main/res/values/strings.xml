@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Mood Tracker</string>
+    <string name="image_view_background">Background image</string>
+    <string name="image_view_happy">Smiley image</string>
+    <string name="image_view_comments">To add comments</string>
+    <string name="image_view_history">To access to the history</string>
 </resources>

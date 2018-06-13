@@ -17,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private SwipeGestureDetector gestureDetector;
     ImageView imageViewBackground;
     ImageView imageViewSmiley;
+    ImageView imageViewHistory;
+    ImageView imageViewComments;
+
     int levelOfMood = 3; // On what mood we are positioned
 
     // an ArrayList to store the smiley imageView and background
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         // reference the elements of layout
         imageViewBackground = findViewById(R.id.imageView_background);
         imageViewSmiley = findViewById(R.id.imageView_happy);
+        imageViewHistory = findViewById(R.id.imageView_history);
+        imageViewComments = findViewById(R.id.imageView_comments);
 
         gestureDetector = new SwipeGestureDetector(this);
 
