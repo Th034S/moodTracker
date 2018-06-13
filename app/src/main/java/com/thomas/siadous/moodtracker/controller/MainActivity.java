@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeGestureDetector gestureDetector;
     ImageView imageViewBackground;
     ImageView imageViewSmiley;
-    int levelOfMood = 3;
+    int levelOfMood = 3; // On what mood we are positioned
 
     // an ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
@@ -58,57 +58,51 @@ public class MainActivity extends AppCompatActivity {
 
         switch (direction) {
             case TOP_TO_BOTTOM:
-                levelOfMood--;
-                message = "Top to Bottom swipe";
-                if (levelOfMood == 4) {
-                imageViewSmiley.setImageResource(imageList.get(0));
-                imageViewBackground.setImageResource(imageList.get(1));
-                }
-                else if (levelOfMood == 3) {
-                imageViewSmiley.setImageResource(imageList.get(2));
-                imageViewBackground.setImageResource(imageList.get(3));
-                }
-
-                else if (levelOfMood == 2) {
-                    imageViewSmiley.setImageResource(imageList.get(4));
-                    imageViewBackground.setImageResource(imageList.get(5));
-                }
-                else if (levelOfMood == 1) {
-                    imageViewSmiley.setImageResource(imageList.get(6));
-                    imageViewBackground.setImageResource(imageList.get(7));
-                }
-                else if (levelOfMood == 0) {
-                    imageViewSmiley.setImageResource(imageList.get(8));
-                    imageViewBackground.setImageResource(imageList.get(9));
+                if(levelOfMood <= 4 && levelOfMood > 0) {
+                    levelOfMood--;
+                    // message = "Top to Bottom swipe";
+                    if (levelOfMood == 4) {
+                        imageViewSmiley.setImageResource(imageList.get(0));
+                        imageViewBackground.setImageResource(imageList.get(1));
+                    } else if (levelOfMood == 3) {
+                        imageViewSmiley.setImageResource(imageList.get(2));
+                        imageViewBackground.setImageResource(imageList.get(3));
+                    } else if (levelOfMood == 2) {
+                        imageViewSmiley.setImageResource(imageList.get(4));
+                        imageViewBackground.setImageResource(imageList.get(5));
+                    } else if (levelOfMood == 1) {
+                        imageViewSmiley.setImageResource(imageList.get(6));
+                        imageViewBackground.setImageResource(imageList.get(7));
+                    } else if (levelOfMood == 0) {
+                        imageViewSmiley.setImageResource(imageList.get(8));
+                        imageViewBackground.setImageResource(imageList.get(9));
+                    }
                 }
                 break;
 
             case BOTTOM_TO_TOP:
-                levelOfMood++;
-                message = "Bottom to Top swipe";
-                if (levelOfMood == 4) {
-                    imageViewSmiley.setImageResource(imageList.get(0));
-                    imageViewBackground.setImageResource(imageList.get(1));
-                }
-                else if (levelOfMood == 3) {
-                    imageViewSmiley.setImageResource(imageList.get(2));
-                    imageViewBackground.setImageResource(imageList.get(3));
-                }
-
-                else if (levelOfMood == 2) {
-                    imageViewSmiley.setImageResource(imageList.get(4));
-                    imageViewBackground.setImageResource(imageList.get(5));
-                }
-                else if (levelOfMood == 1) {
-                    imageViewSmiley.setImageResource(imageList.get(6));
-                    imageViewBackground.setImageResource(imageList.get(7));
-                }
-                else if (levelOfMood == 0) {
-                    imageViewSmiley.setImageResource(imageList.get(8));
-                    imageViewBackground.setImageResource(imageList.get(9));
+                if(levelOfMood < 4 && levelOfMood >= 0) {
+                    levelOfMood++;
+                    // message = "Bottom to Top swipe";
+                    if (levelOfMood == 4) {
+                        imageViewSmiley.setImageResource(imageList.get(0));
+                        imageViewBackground.setImageResource(imageList.get(1));
+                    } else if (levelOfMood == 3) {
+                        imageViewSmiley.setImageResource(imageList.get(2));
+                        imageViewBackground.setImageResource(imageList.get(3));
+                    } else if (levelOfMood == 2) {
+                        imageViewSmiley.setImageResource(imageList.get(4));
+                        imageViewBackground.setImageResource(imageList.get(5));
+                    } else if (levelOfMood == 1) {
+                        imageViewSmiley.setImageResource(imageList.get(6));
+                        imageViewBackground.setImageResource(imageList.get(7));
+                    } else if (levelOfMood == 0) {
+                        imageViewSmiley.setImageResource(imageList.get(8));
+                        imageViewBackground.setImageResource(imageList.get(9));
+                    }
                 }
                 break;
         }
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
