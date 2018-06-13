@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             case TOP_TO_BOTTOM:
                 if(levelOfMood <= 4 && levelOfMood > 0) {
                     levelOfMood--;
-                    // message = "Top to Bottom swipe";
+                   // message = "Top to Bottom swipe"; // FOR TEST
                     if (levelOfMood == 4) {
                         imageViewSmiley.setImageResource(imageList.get(0));
                         imageViewBackground.setImageResource(imageList.get(1));
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             case BOTTOM_TO_TOP:
                 if(levelOfMood < 4 && levelOfMood >= 0) {
                     levelOfMood++;
-                    // message = "Bottom to Top swipe";
+                   // message = "Bottom to Top swipe"; // FOR TEST
                     if (levelOfMood == 4) {
                         imageViewSmiley.setImageResource(imageList.get(0));
                         imageViewBackground.setImageResource(imageList.get(1));
@@ -103,6 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
-            // Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
     }
 }
