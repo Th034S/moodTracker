@@ -34,7 +34,7 @@ public class SwipeGestureDetector extends GestureDetector {
         });
 
     }
-    public static enum SwipeDirection {
+    public enum SwipeDirection {
         TOP_TO_BOTTOM, BOTTOM_TO_TOP
     }
 
