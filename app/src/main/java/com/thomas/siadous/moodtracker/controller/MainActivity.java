@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     // an ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         imageList.add(7, R.color.warm_grey);
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
-
     }
 
     @Override
@@ -59,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSwipe(SwipeGestureDetector.SwipeDirection direction) {
-        String message = "";
-
+        // String message = ""; // FOR TEST
         switch (direction) {
             case TOP_TO_BOTTOM:
                 if(levelOfMood <= 4 && levelOfMood > 0) {
@@ -108,6 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
-            // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
+               // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
     }
 }
