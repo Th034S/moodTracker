@@ -1,15 +1,21 @@
 package com.thomas.siadous.moodtracker.controller;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-
+// import android.widget.Toast;
 import com.thomas.siadous.moodtracker.R;
-
 import java.util.ArrayList;
+
+
 
 // MainActivity class, first activity launched
 public class MainActivity extends AppCompatActivity {
@@ -17,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeGestureDetector gestureDetector;
     ImageView imageViewBackground;
     ImageView imageViewSmiley;
-    ImageView imageViewHistory;
-    ImageView imageViewComments;
+    ImageButton imageViewHistory;
+    ImageButton imageViewComments;
 
     int levelOfMood = 3; // On what mood we are positioned
 
@@ -33,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // reference the elements of layout
         imageViewBackground = findViewById(R.id.imageView_background);
         imageViewSmiley = findViewById(R.id.imageView_happy);
-        imageViewHistory = findViewById(R.id.imageView_history);
+        imageViewHistory =  findViewById(R.id.imageView_history);
         imageViewComments = findViewById(R.id.imageView_comments);
 
         gestureDetector = new SwipeGestureDetector(this);
@@ -49,8 +55,18 @@ public class MainActivity extends AppCompatActivity {
         imageList.add(7, R.color.warm_grey);
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
-    }
 
+        // effect an action when click on imageViewHistory
+        imageViewHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //User clicked the button
+                Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(historyActivityIntent);
+            }
+        });
+
+    }
     @Override
     public boolean dispatchTouchEvent (MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
