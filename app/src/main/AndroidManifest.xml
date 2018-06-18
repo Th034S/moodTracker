@@ -15,8 +15,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".controller.HistoryActivity"></activity>
+        <activity android:name=".controller.HistoryActivity"
+            android:label="History Page">
+
+        </activity>
     </application>
 
 </manifest>

@@ -6,25 +6,27 @@ import android.graphics.PorterDuff;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-// import android.widget.Toast;
+import android.widget.Toast;
 import com.thomas.siadous.moodtracker.R;
 import java.util.ArrayList;
 
 
 
 // MainActivity class, first activity launched
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { //implements OnClickListener
 
     private SwipeGestureDetector gestureDetector;
     ImageView imageViewBackground;
     ImageView imageViewSmiley;
-    ImageButton imageViewHistory;
-    ImageButton imageViewComments;
+    ImageButton imageButtonHistory;
+    ImageButton imageButtonComments;
 
     int levelOfMood = 3; // On what mood we are positioned
 
@@ -39,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         // reference the elements of layout
         imageViewBackground = findViewById(R.id.imageView_background);
         imageViewSmiley = findViewById(R.id.imageView_happy);
-        imageViewHistory =  findViewById(R.id.imageView_history);
-        imageViewComments = findViewById(R.id.imageView_comments);
+        imageButtonHistory =  findViewById(R.id.imageButton_history);
+        imageButtonComments = findViewById(R.id.imageButton_comments);
 
         gestureDetector = new SwipeGestureDetector(this);
 
@@ -56,17 +58,25 @@ public class MainActivity extends AppCompatActivity {
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
 
-        // effect an action when click on imageViewHistory
-        imageViewHistory.setOnClickListener(new View.OnClickListener() {
+
+    //    imageButtonHistory.setOnClickListener(this);
+
+        // Launch a new activity when click on imageButtonHistory
+         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+           public void onClick(View view) {
                 //User clicked the button
+
+                String message = "Clicked";
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(historyActivityIntent);
             }
         });
 
     }
+
     @Override
     public boolean dispatchTouchEvent (MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
@@ -123,4 +133,13 @@ public class MainActivity extends AppCompatActivity {
         }
                // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
     }
+
+
+  /*  @Override
+   public void onClick(View view) {
+       String message = "Clicked";
+       Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+       Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
+      startActivity(historyActivityIntent);
+   } */
 }
