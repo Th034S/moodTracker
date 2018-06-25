@@ -1,5 +1,5 @@
 package com.thomas.siadous.moodtracker.controller;
-
+/*
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -10,6 +10,7 @@ public class SwipeGestureDetector extends GestureDetector  {
 
     public SwipeGestureDetector(final MainActivity context) {
         super(context, new GestureDetector.SimpleOnGestureListener() {
+
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -40,4 +41,4 @@ public class SwipeGestureDetector extends GestureDetector  {
         TOP_TO_BOTTOM, BOTTOM_TO_TOP
     }
 
-}
+} */

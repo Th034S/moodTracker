@@ -1,33 +1,43 @@
 package com.thomas.siadous.moodtracker.controller;
 
+// IMPORTS
+
 import android.content.Intent;
-import android.gesture.GestureOverlayView;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.thomas.siadous.moodtracker.R;
 import java.util.ArrayList;
 
 
-// MainActivity class, first activity launched
-public class MainActivity extends AppCompatActivity  {
+// MainActivity class, first activity launched, permit to access to the different moods with the swipe
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
-    private SwipeGestureDetector gestureDetector;
-    ImageView imageViewBackground;
-    ImageView imageViewSmiley;
-    ImageButton imageButtonHistory;
-    ImageButton imageButtonComments;
+    // THE DIFFERENT VARIABLES
 
-    int levelOfMood = 3; // On what mood we are positioned
+    // private SwipeGestureDetector gestureDetector;
+    ImageView imageViewBackground; // View for the background
+    ImageView imageViewSmiley; // View for the smiley (mood)
+    ImageButton imageButtonHistory; // Button to access to the mood history
+    ImageButton imageButtonComments; // Button to add comments
+
+
+    int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
+    private static final String DEBUG_TAG = "Gestures"; // FOR TEST
+
+    private GestureDetectorCompat mDetector;
 
     // an ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
+
+
+    //THE METHOD onCreate
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +50,10 @@ public class MainActivity extends AppCompatActivity  {
         imageButtonHistory = findViewById(R.id.imageButton_history);
         imageButtonComments = findViewById(R.id.imageButton_comments);
 
-        gestureDetector = new SwipeGestureDetector(this);
+        //gestureDetector = new SwipeGestureDetector(this);
+        mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector FOR TEST
 
-
-        //add smiley images and background to the ArrayList
+        //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
         imageList.add(1, R.color.banana_yellow);
         imageList.add(2, R.drawable.smiley_happy);
@@ -55,6 +65,8 @@ public class MainActivity extends AppCompatActivity  {
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
 
+        Log.d(DEBUG_TAG, "Log works");
+
 
         // Launch a new activity when click on imageButtonHistory
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
@@ -62,21 +74,23 @@ public class MainActivity extends AppCompatActivity  {
             public void onClick(View view) {
                 Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(historyActivityIntent);
+                Log.d(DEBUG_TAG, "Clicked");
             }
         });
 
 
     }
 
-        @Override
+        /*@Override
         public boolean dispatchTouchEvent (MotionEvent event){
             return gestureDetector.onTouchEvent(event);
         }
+        */
 
-        public void onSwipe (SwipeGestureDetector.SwipeDirection direction){
+        public void onSwipe (Boolean isBottom ){
             // String message = ""; // FOR TEST
-            switch (direction) {
-                case TOP_TO_BOTTOM:
+
+               if(isBottom) {
                     if (levelOfMood <= 4 && levelOfMood > 0) {
                         levelOfMood--;
                         // message = "Top to Bottom swipe"; // FOR TEST
@@ -96,44 +110,83 @@ public class MainActivity extends AppCompatActivity  {
                             imageViewSmiley.setImageResource(imageList.get(8));
                             imageViewBackground.setImageResource(imageList.get(9));
                         }
-                    }
-                    break;
+                    } }
 
-                case BOTTOM_TO_TOP:
-                    if (levelOfMood < 4 && levelOfMood >= 0) {
-                        levelOfMood++;
-                        // message = "Bottom to Top swipe"; // FOR TEST
-                        if (levelOfMood == 4) {
-                            imageViewSmiley.setImageResource(imageList.get(0));
-                            imageViewBackground.setImageResource(imageList.get(1));
-                        } else if (levelOfMood == 3) {
-                            imageViewSmiley.setImageResource(imageList.get(2));
-                            imageViewBackground.setImageResource(imageList.get(3));
-                        } else if (levelOfMood == 2) {
-                            imageViewSmiley.setImageResource(imageList.get(4));
-                            imageViewBackground.setImageResource(imageList.get(5));
-                        } else if (levelOfMood == 1) {
-                            imageViewSmiley.setImageResource(imageList.get(6));
-                            imageViewBackground.setImageResource(imageList.get(7));
-                        } else if (levelOfMood == 0) {
-                            imageViewSmiley.setImageResource(imageList.get(8));
-                            imageViewBackground.setImageResource(imageList.get(9));
-                        }
-                    }
-                    break;
-            }
+
+              else {
+                   if (levelOfMood < 4 && levelOfMood >= 0) {
+                       levelOfMood++;
+                       // message = "Bottom to Top swipe"; // FOR TEST
+                       if (levelOfMood == 4) {
+                           imageViewSmiley.setImageResource(imageList.get(0));
+                           imageViewBackground.setImageResource(imageList.get(1));
+                       } else if (levelOfMood == 3) {
+                           imageViewSmiley.setImageResource(imageList.get(2));
+                           imageViewBackground.setImageResource(imageList.get(3));
+                       } else if (levelOfMood == 2) {
+                           imageViewSmiley.setImageResource(imageList.get(4));
+                           imageViewBackground.setImageResource(imageList.get(5));
+                       } else if (levelOfMood == 1) {
+                           imageViewSmiley.setImageResource(imageList.get(6));
+                           imageViewBackground.setImageResource(imageList.get(7));
+                       } else if (levelOfMood == 0) {
+                           imageViewSmiley.setImageResource(imageList.get(8));
+                           imageViewBackground.setImageResource(imageList.get(9));
+                       }
+                   }
+               }
+        }
             // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
+
+
+    @Override
+    public boolean onDown(MotionEvent event) {
+        Log.d(DEBUG_TAG,"onDown: " + event.toString());
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent event) {
+        Log.d(DEBUG_TAG, "onShowPress: " + event.toString());
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent event) {
+        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
+        return true;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent event1, MotionEvent event2, float vX, float vY) {
+        Log.d(DEBUG_TAG, "onScroll: " + event1.toString() + event2.toString());
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent event) {
+        Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        if (e1.getY() < e2.getY()) {
+            Log.d(DEBUG_TAG, "Up to Down swipe performed");
+            onSwipe(true);
         }
 
-
-
-
-  /*  @Override
-   public void onClick(View view) {
-       String message = "Clicked";
-       Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-       Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-      startActivity(historyActivityIntent);
-   } */
+        if (e1.getY() > e2.getY()) {
+            Log.d(DEBUG_TAG, "Down to Up swipe performed");
+            onSwipe(false);
     }
+
+        return true;
+
+        }
+
+    }
+
+
+
+
 
