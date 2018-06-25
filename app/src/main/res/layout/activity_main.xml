@@ -22,31 +22,43 @@
         android:contentDescription="@string/image_view_happy"
         android:src="@drawable/smiley_happy" />
 
-    <ImageButton
-        android:id="@+id/imageButton_comments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignStart="@+id/imageView_happy"
-        android:layout_marginBottom="25dp"
-        android:layout_marginStart="25dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/image_view_comments"
-        app:srcCompat="@drawable/ic_note_add_black" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/imageButton_history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/imageView_happy"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="25dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/image_view_history"
-        app:srcCompat="@drawable/ic_history_black" />
+        <ImageButton
+            android:id="@+id/imageButton_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="502dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/image_view_comments"
+            app:layout_constrainedHeight="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_note_add_black" />
+
+        <ImageButton
+            android:id="@+id/imageButton_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="506dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/image_view_history"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_history_black" />
+    </android.support.constraint.ConstraintLayout>
 
 
 </RelativeLayout>

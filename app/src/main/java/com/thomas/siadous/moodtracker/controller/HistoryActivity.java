@@ -2,6 +2,7 @@ package com.thomas.siadous.moodtracker.controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 
 import com.thomas.siadous.moodtracker.R;
@@ -13,4 +14,6 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
     }
+
+
 }

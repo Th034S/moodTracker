@@ -4,7 +4,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-public class SwipeGestureDetector extends GestureDetector {
+public class SwipeGestureDetector extends GestureDetector  {
 
     private final static int DELTA_MIN = 50;
 
@@ -34,6 +34,8 @@ public class SwipeGestureDetector extends GestureDetector {
         });
 
     }
+
+
     public enum SwipeDirection {
         TOP_TO_BOTTOM, BOTTOM_TO_TOP
     }
