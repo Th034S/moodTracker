@@ -2,16 +2,23 @@ package com.thomas.siadous.moodtracker.controller;
 
 // IMPORTS
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.thomas.siadous.moodtracker.R;
 import java.util.ArrayList;
 
@@ -21,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     // THE DIFFERENT VARIABLES
 
-    // private SwipeGestureDetector gestureDetector;
     ImageView imageViewBackground; // View for the background
     ImageView imageViewSmiley; // View for the smiley (mood)
     ImageButton imageButtonHistory; // Button to access to the mood history
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
-    private static final String DEBUG_TAG = "Gestures"; // FOR TEST
+    private static final String DEBUG_TAG = "Gestures"; // FOR TEST : LOG
 
     private GestureDetectorCompat mDetector;
 
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     ArrayList<Integer> imageList = new ArrayList<>();
 
 
-    //THE METHOD onCreate
+    // THE METHOD onCreate
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageButtonHistory = findViewById(R.id.imageButton_history);
         imageButtonComments = findViewById(R.id.imageButton_comments);
 
-        //gestureDetector = new SwipeGestureDetector(this);
-        mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector FOR TEST
+        final Context context = this;
+
+        mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
 
-        Log.d(DEBUG_TAG, "Log works");
+        Log.d(DEBUG_TAG, "Log works"); // FOR TEST
 
 
         // Launch a new activity when click on imageButtonHistory
@@ -78,6 +85,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
 
+        imageButtonComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.dialog_box_comments);
+
+                TextView titleComment = dialog.findViewById(R.id.title_dialog);
+                EditText editComment = dialog.findViewById(R.id.edit_dialog);
+
+                Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog);
+                Button okCommentBtn = dialog.findViewById(R.id.ok_button_dialog);
+
+                cancelCommentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
+            }
+        });
 
     }
 
@@ -89,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return super.onTouchEvent(event);
     }
 
-
+        // According to the swipe up or down, background and smiley change
         public void onSwipe (Boolean isBottom ){
             // String message = ""; // FOR TEST
 
@@ -170,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
+    // Permit the swipe according
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
