@@ -81,11 +81,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     }
 
-        /*@Override
-        public boolean dispatchTouchEvent (MotionEvent event){
-            return gestureDetector.onTouchEvent(event);
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        if (this.mDetector.onTouchEvent(event)) {
+            return true;
         }
-        */
+        return super.onTouchEvent(event);
+    }
+
 
         public void onSwipe (Boolean isBottom ){
             // String message = ""; // FOR TEST
