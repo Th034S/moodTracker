@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageButtonComments = findViewById(R.id.imageButton_comments);
 
         final Context context = this;
-
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
 
         //add smiley images and background in an ArrayList
@@ -74,8 +72,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         Log.d(DEBUG_TAG, "Log works"); // FOR TEST
 
-
-        // Launch a new activity when click on imageButtonHistory
+        // Launch a new activity (HistoryActivity) when click on imageButtonHistory
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 Log.d(DEBUG_TAG, "Clicked");
             }
         });
-
+        // Box dialog appears when clicked
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,12 +100,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         dialog.dismiss();
                     }
                 });
-
                 dialog.show();
-
             }
         });
-
     }
 
     @Override
@@ -120,10 +114,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
         // According to the swipe up or down, background and smiley change
-        public void onSwipe (Boolean isBottom ){
+        public void onSwipe (Boolean isUp ){
             // String message = ""; // FOR TEST
 
-               if(isBottom) {
+               if(isUp) {
                     if (levelOfMood <= 4 && levelOfMood > 0) {
                         levelOfMood--;
                         // message = "Top to Bottom swipe"; // FOR TEST
@@ -146,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     } }
 
 
-              else {
+              else  {
                    if (levelOfMood < 4 && levelOfMood >= 0) {
                        levelOfMood++;
                        // message = "Bottom to Top swipe"; // FOR TEST
@@ -200,23 +194,25 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
-    // Permit the swipe according
+    // Permit the vertical swipe
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+       float deltaX = e2.getX() - e1.getX();
+       float deltaY = e2.getY() - e1.getY();
 
-        if (e1.getY() < e2.getY()) {
-            Log.d(DEBUG_TAG, "Up to Down swipe performed");
-            onSwipe(true);
-        }
+       if(Math.abs(deltaY) > Math.abs(deltaX)) { // Y travels more than X
+           if (e1.getY() < e2.getY()) {
+               Log.d(DEBUG_TAG, "Up to Down swipe performed");
+               onSwipe(true);
+           }
 
-        if (e1.getY() > e2.getY()) {
-            Log.d(DEBUG_TAG, "Down to Up swipe performed");
-            onSwipe(false);
-    }
-
+           if (e1.getY() > e2.getY()) {
+               Log.d(DEBUG_TAG, "Down to Up swipe performed");
+               onSwipe(false);
+           }
+       }
         return true;
-
-        }
+    }
 
     }
 
