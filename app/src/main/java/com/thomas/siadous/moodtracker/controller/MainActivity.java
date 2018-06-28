@@ -5,6 +5,7 @@ package com.thomas.siadous.moodtracker.controller;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,12 +28,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     // THE DIFFERENT VARIABLES
 
-    ImageView imageViewBackground; // View for the background
-    ImageView imageViewSmiley; // View for the smiley (mood)
-    ImageButton imageButtonHistory; // Button to access to the mood history
-    ImageButton imageButtonComments; // Button to add comments
+    private ImageView imageViewBackground; // View for the background
+    private ImageView imageViewSmiley; // View for the smiley (mood)
+    private ImageButton imageButtonHistory; // Button to access to the mood history
+    private ImageButton imageButtonComments; // Button to add comments
 
-
+    private SharedPreferences mPreferences; // Use to store data
+    public final static String PREFERENCE_FILE = "PREFERENCE_FILE";
+    public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT";
     int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // FOR TEST : LOG
 
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         final Context context = this;
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
+        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE);
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 dialog.setContentView(R.layout.dialog_box_comments);
 
                 TextView titleComment = dialog.findViewById(R.id.title_dialog);
-                EditText editComment = dialog.findViewById(R.id.edit_dialog);
+                final EditText editComment = dialog.findViewById(R.id.edit_dialog);
 
                 Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog);
                 Button okCommentBtn = dialog.findViewById(R.id.ok_button_dialog);
@@ -100,6 +104,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         dialog.dismiss();
                     }
                 });
+
+                okCommentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply();
+                        dialog.dismiss();
+                    }
+                });
+
                 dialog.show();
             }
         });
