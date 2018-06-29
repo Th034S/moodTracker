@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thomas.siadous.moodtracker.R;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private static final String DEBUG_TAG = "Gestures"; // FOR TEST : LOG
 
     private GestureDetectorCompat mDetector;
+    int mNSoundID;
+    SoundPool mSoundPool;
 
     // an ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
@@ -61,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         final Context context = this;
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE);
+        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        final String limitTime = "00:00:00";
+
+        mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0);
+
+        mNSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1);
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -108,8 +121,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 okCommentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply();
-                        dialog.dismiss();
+                        Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+                        if (!(sdf.format(timeStamp).equals(limitTime))) {
+                            mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply();
+                            dialog.dismiss();
+                        }
                     }
                 });
 
@@ -143,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         } else if (levelOfMood == 2) {
                             imageViewSmiley.setImageResource(imageList.get(4));
                             imageViewBackground.setImageResource(imageList.get(5));
+                            playSoundNormal(imageViewSmiley);
                         } else if (levelOfMood == 1) {
                             imageViewSmiley.setImageResource(imageList.get(6));
                             imageViewBackground.setImageResource(imageList.get(7));
@@ -166,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                        } else if (levelOfMood == 2) {
                            imageViewSmiley.setImageResource(imageList.get(4));
                            imageViewBackground.setImageResource(imageList.get(5));
+                           playSoundNormal(imageViewSmiley);
                        } else if (levelOfMood == 1) {
                            imageViewSmiley.setImageResource(imageList.get(6));
                            imageViewBackground.setImageResource(imageList.get(7));
@@ -226,6 +244,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
        }
         return true;
     }
+
+    public void playSoundNormal (View view) {
+        Log.d("DEBUG", "normal sound played");
+        mSoundPool.play(mNSoundID,1.0f, 1.0f, 0,0, 1.0f);
+    }
+
 
     }
 
