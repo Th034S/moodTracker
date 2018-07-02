@@ -11,6 +11,8 @@ import android.media.SoundPool;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         final Context context = this;
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE);
+
+
         final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         final String limitTime = "00:00:00";
 
@@ -108,8 +112,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 TextView titleComment = dialog.findViewById(R.id.title_dialog);
                 final EditText editComment = dialog.findViewById(R.id.edit_dialog);
 
+
                 Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog);
-                Button okCommentBtn = dialog.findViewById(R.id.ok_button_dialog);
+                final Button okDialogBtn = dialog.findViewById(R.id.ok_button_dialog);
+
+                okDialogBtn.setEnabled(false);
+
+
+
 
                 cancelCommentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -118,20 +128,40 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                 });
 
-                okCommentBtn.setOnClickListener(new View.OnClickListener() {
+
+                okDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-                        if (!(sdf.format(timeStamp).equals(limitTime))) {
+                            Log.d("DEBUG", "enter onClick");
                             mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply();
                             dialog.dismiss();
-                        }
+
                     }
                 });
 
                 dialog.show();
+
+                editComment.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                    okDialogBtn.setEnabled(s.toString().length() != 0);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
             }
         });
+
+
     }
 
     @Override
