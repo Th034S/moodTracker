@@ -12,9 +12,14 @@ import android.widget.Toast;
 
 import com.thomas.siadous.moodtracker.R;
 
+/**
+ * HistoryActivity class permit to display the mood history
+ */
 public class HistoryActivity extends AppCompatActivity {
 
-
+    /**
+     * VARIABLES
+     */
     private SharedPreferences mPreferencesHistory;
     private String mComment;
     TextView mDisplayComment;

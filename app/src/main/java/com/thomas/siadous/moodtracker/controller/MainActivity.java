@@ -1,6 +1,8 @@
 package com.thomas.siadous.moodtracker.controller;
 
-// IMPORTS
+/**
+ * IMPORTS
+  */
 
 import android.app.Dialog;
 import android.content.Context;
@@ -30,54 +32,62 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-// MainActivity class, first activity launched, permit to access to the different moods with the swipe
+/**
+ * MainActivity class, permit to access : to the different moods with the swipe
+ */
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
-    // THE DIFFERENT VARIABLES
-
-    private ImageView imageViewBackground; // View for the background
-    private ImageView imageViewSmiley; // View for the smiley (mood)
-    private ImageButton imageButtonHistory; // Button to access to the mood history
-    private ImageButton imageButtonComments; // Button to add comments
+    /**
+     * DIFFERENT VARIABLES
+      */
+    private ImageView imageViewBackground; // ImageView for the background
+    private ImageView imageViewSmiley; // ImageView for the smiley
+    private ImageButton imageButtonHistory; // ImageButton to access to the mood history
+    private ImageButton imageButtonComments; // ImageButton to add comments
 
     private SharedPreferences mPreferences; // Use to store data
-    public final static String PREFERENCE_FILE = "PREFERENCE_FILE";
-    public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT";
+    public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
+    public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
     int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
-    private static final String DEBUG_TAG = "Gestures"; // FOR TEST : LOG
+    private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
-    private GestureDetectorCompat mDetector;
-    int mNSoundID;
-    SoundPool mSoundPool;
+    private GestureDetectorCompat mDetector; // For swipe
+    int mNatureNormalSoundID; // Nature Sound id
+    SoundPool mSoundPool; // For sound
 
-    // an ArrayList to store the smiley imageView and background
+    /**
+     * an ArrayList to store the smiley imageView and background
+      */
     ArrayList<Integer> imageList = new ArrayList<>();
 
 
-    // THE METHOD onCreate
-
+    /**
+     * THE METHOD onCreate
+      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // reference the elements of layout
+        /*
+           reference the elements of layout
+          */
         imageViewBackground = findViewById(R.id.imageView_background);
         imageViewSmiley = findViewById(R.id.imageView_happy);
         imageButtonHistory = findViewById(R.id.imageButton_history);
         imageButtonComments = findViewById(R.id.imageButton_comments);
 
-        final Context context = this;
+        final Context context = this; // context constant
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
-        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE);
+        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        final String limitTime = "00:00:00";
+        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); // Format for date
+        final String limitTime = "00:00:00"; // limit hour to save mood
 
-        mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0);
+        mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
-        mNSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1);
+        mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference nature sound
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -91,9 +101,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageList.add(8, R.drawable.smiley_sad);
         imageList.add(9, R.color.faded_red);
 
-        Log.d(DEBUG_TAG, "Log works"); // FOR TEST
+        Log.d(DEBUG_TAG, "Log works"); // Log d FOR TEST
 
-        // Launch a new activity (HistoryActivity) when click on imageButtonHistory
+        /*
+         * Launch a new activity (HistoryActivity) when click on imageButtonHistory
+          */
+
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,29 +115,25 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 Log.d(DEBUG_TAG, "Clicked");
             }
         });
-        // Box dialog appears when clicked
+        // dialog box to add comments appears when clicked
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_box_comments);
 
-                TextView titleComment = dialog.findViewById(R.id.title_dialog);
-                final EditText editComment = dialog.findViewById(R.id.edit_dialog);
+                //References
+                TextView titleComment = dialog.findViewById(R.id.title_dialog); // title of the dialog box
+                final EditText editComment = dialog.findViewById(R.id.edit_dialog); // Input
+                Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog); // cancel button
+                final Button okDialogBtn = dialog.findViewById(R.id.ok_button_dialog); // ok button
 
-
-                Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog);
-                final Button okDialogBtn = dialog.findViewById(R.id.ok_button_dialog);
-
-                okDialogBtn.setEnabled(false);
-
-
-
+                okDialogBtn.setEnabled(false); // Disable okDialogButton
 
                 cancelCommentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dialog.dismiss();
+                        dialog.dismiss(); // close dialog box when click in cancelButton
                     }
                 });
 
@@ -134,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     public void onClick(View view) {
                         Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
                             Log.d("DEBUG", "enter onClick");
-                            mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply();
-                            dialog.dismiss();
+                            mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
+                            dialog.dismiss(); // close dialog box
 
                     }
                 });
@@ -150,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                     @Override
                     public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                    okDialogBtn.setEnabled(s.toString().length() != 0);
+                    okDialogBtn.setEnabled(s.toString().length() != 0); // Enable the okButton when the length of comment does not equal to zero
                     }
 
                     @Override
@@ -165,14 +174,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event){ // For the good performance of gestureDetector
         if (this.mDetector.onTouchEvent(event)) {
             return true;
         }
         return super.onTouchEvent(event);
     }
 
-        // According to the swipe up or down, background and smiley change
+    /**
+     * According to the swipe up or down, background and smiley change
+      */
+
         public void onSwipe (Boolean isUp ){
             // String message = ""; // FOR TEST
 
@@ -189,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         } else if (levelOfMood == 2) {
                             imageViewSmiley.setImageResource(imageList.get(4));
                             imageViewBackground.setImageResource(imageList.get(5));
-                            playSoundNormal(imageViewSmiley);
+                            playNatureNormalSound(imageViewSmiley);
                         } else if (levelOfMood == 1) {
                             imageViewSmiley.setImageResource(imageList.get(6));
                             imageViewBackground.setImageResource(imageList.get(7));
@@ -213,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                        } else if (levelOfMood == 2) {
                            imageViewSmiley.setImageResource(imageList.get(4));
                            imageViewBackground.setImageResource(imageList.get(5));
-                           playSoundNormal(imageViewSmiley);
+                           playNatureNormalSound(imageViewSmiley);
                        } else if (levelOfMood == 1) {
                            imageViewSmiley.setImageResource(imageList.get(6));
                            imageViewBackground.setImageResource(imageList.get(7));
@@ -255,7 +267,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
-    // Permit the vertical swipe
+    /**
+     * Permit the vertical swipe
+      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
        float deltaX = e2.getX() - e1.getX();
@@ -275,9 +289,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return true;
     }
 
-    public void playSoundNormal (View view) {
+    // To play natureNormalSound
+    public void playNatureNormalSound (View view) {
         Log.d("DEBUG", "normal sound played");
-        mSoundPool.play(mNSoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mNatureNormalSoundID,1.0f, 1.0f, 0,0, 1.0f);
     }
 
 
