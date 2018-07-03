@@ -24,6 +24,7 @@ public class HistoryActivity extends AppCompatActivity {
     private String mComment;
     TextView mDisplayComment;
     ImageButton mToastComment;
+    int mColorTest = R.color.banana_yellow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class HistoryActivity extends AppCompatActivity {
         });
 
         mDisplayComment.setText("Hier");
+
+        mDisplayComment.setBackgroundResource(R.color.banana_yellow);
+        mDisplayComment.setWidth(100);
 
 
 
