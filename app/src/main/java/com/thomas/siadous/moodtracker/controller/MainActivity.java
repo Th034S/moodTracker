@@ -52,8 +52,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
     private GestureDetectorCompat mDetector; // For swipe
+    int mCoolSuperHappySoundID;
+    int mCatHappySoundID;
     int mNatureNormalSoundID; // Nature Sound id
-    SoundPool mSoundPool; // For sound
+    int mTrainDisappointedSoundID;
+    int mBrokenGlassSadSoundID;
+    SoundPool mSoundPool; // For sounds
 
     /**
      * an ArrayList to store the smiley imageView and background
@@ -87,7 +91,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
+        mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound,1);
+        mCatHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.purring_cat_sound,1);
         mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference nature sound
+        mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound,1);
+        mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound,1);
+
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -195,9 +204,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (levelOfMood == 4) {
                             imageViewSmiley.setImageResource(imageList.get(0));
                             imageViewBackground.setImageResource(imageList.get(1));
+                            playCoolSuperHappySound(imageViewSmiley);
                         } else if (levelOfMood == 3) {
                             imageViewSmiley.setImageResource(imageList.get(2));
                             imageViewBackground.setImageResource(imageList.get(3));
+                            playCatHappySound(imageViewSmiley);
                         } else if (levelOfMood == 2) {
                             imageViewSmiley.setImageResource(imageList.get(4));
                             imageViewBackground.setImageResource(imageList.get(5));
@@ -205,9 +216,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         } else if (levelOfMood == 1) {
                             imageViewSmiley.setImageResource(imageList.get(6));
                             imageViewBackground.setImageResource(imageList.get(7));
+                            playTrainDisappointedSound(imageViewSmiley);
                         } else if (levelOfMood == 0) {
                             imageViewSmiley.setImageResource(imageList.get(8));
                             imageViewBackground.setImageResource(imageList.get(9));
+                            playBrokenGlassSadSound(imageViewSmiley);
                         }
                     } }
 
@@ -219,9 +232,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                        if (levelOfMood == 4) {
                            imageViewSmiley.setImageResource(imageList.get(0));
                            imageViewBackground.setImageResource(imageList.get(1));
+                           playCoolSuperHappySound(imageViewSmiley);
                        } else if (levelOfMood == 3) {
                            imageViewSmiley.setImageResource(imageList.get(2));
                            imageViewBackground.setImageResource(imageList.get(3));
+                           playCatHappySound(imageViewSmiley);
                        } else if (levelOfMood == 2) {
                            imageViewSmiley.setImageResource(imageList.get(4));
                            imageViewBackground.setImageResource(imageList.get(5));
@@ -229,9 +244,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                        } else if (levelOfMood == 1) {
                            imageViewSmiley.setImageResource(imageList.get(6));
                            imageViewBackground.setImageResource(imageList.get(7));
+                           playTrainDisappointedSound(imageViewSmiley);
                        } else if (levelOfMood == 0) {
                            imageViewSmiley.setImageResource(imageList.get(8));
                            imageViewBackground.setImageResource(imageList.get(9));
+                           playBrokenGlassSadSound(imageViewSmiley);
                        }
                    }
                }
@@ -289,10 +306,30 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return true;
     }
 
+    public void playCoolSuperHappySound (View view) {
+        Log.d("DEBUG", "Super happy sound played");
+        mSoundPool.play(mCoolSuperHappySoundID,1.0f, 1.0f, 0,0, 1.0f);
+    }
+
+    public void playCatHappySound (View view) {
+        Log.d("DEBUG", "happy sound played");
+        mSoundPool.play(mCatHappySoundID,1.0f, 1.0f, 0,0, 1.0f);
+    }
+
     // To play natureNormalSound
     public void playNatureNormalSound (View view) {
         Log.d("DEBUG", "normal sound played");
         mSoundPool.play(mNatureNormalSoundID,1.0f, 1.0f, 0,0, 1.0f);
+    }
+
+    public void playTrainDisappointedSound (View view) {
+        Log.d("DEBUG", "disappointed sound played");
+        mSoundPool.play(mTrainDisappointedSoundID,1.0f, 1.0f, 0,0, 1.0f);
+    }
+
+    public void playBrokenGlassSadSound (View view) {
+        Log.d("DEBUG", "Sad sound played");
+        mSoundPool.play(mBrokenGlassSadSoundID,1.0f, 1.0f, 0,0, 1.0f);
     }
 
 
