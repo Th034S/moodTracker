@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,8 +49,12 @@ public class HistoryActivity extends AppCompatActivity {
 
         mDisplayComment.setText("Hier");
 
-        mDisplayComment.setBackgroundResource(R.color.banana_yellow);
-        mDisplayComment.setWidth(100);
+         //mDisplayComment.setBackgroundResource(R.color.banana_yellow);
+        /*RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mDisplayComment.getLayoutParams();
+        params1.width = 306;
+
+       */
+
 
 
 
