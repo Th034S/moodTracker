@@ -1,4 +1,4 @@
-package com.thomas.siadous.moodtracker.controller;
+package com.thomas.siadous.moodtracker;
 
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;

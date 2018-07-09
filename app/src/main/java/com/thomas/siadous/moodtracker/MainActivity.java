@@ -1,4 +1,4 @@
-package com.thomas.siadous.moodtracker.controller;
+package com.thomas.siadous.moodtracker;
 
 /**
  * IMPORTS
@@ -24,8 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.thomas.siadous.moodtracker.R;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

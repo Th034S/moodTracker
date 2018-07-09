@@ -1,17 +1,14 @@
-package com.thomas.siadous.moodtracker.controller;
+package com.thomas.siadous.moodtracker;
 
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import com.thomas.siadous.moodtracker.R;
 
 /**
  * HistoryActivity class permit to display the mood history
@@ -49,16 +46,22 @@ public class HistoryActivity extends AppCompatActivity {
 
         mDisplayComment.setText("Hier");
 
-         //mDisplayComment.setBackgroundResource(R.color.banana_yellow);
-        /*RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mDisplayComment.getLayoutParams();
-        params1.width = 306;
+        //mDisplayComment.setBackgroundResource(R.color.banana_yellow);
 
-       */
-
-
-
+        /* RelativeLayout layout = findViewById(R.id.relativeLayout);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layout.getLayoutParams();
+        layoutParams.height = dpToPx(1280);
+        layoutParams.width = dpToPx(768);
+        layout.setLayoutParams(layoutParams);
+        */
 
     }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp*(getResources().getDisplayMetrics().xdpi/ DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+
 
 
 }
