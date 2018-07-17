@@ -2,7 +2,7 @@ package com.thomas.siadous.moodtracker;
 
 /**
  * IMPORTS
-  */
+ */
 
 import android.app.Dialog;
 import android.content.Context;
@@ -33,11 +33,13 @@ import java.util.ArrayList;
 /**
  * MainActivity class, permit to access : to the different moods with the swipe
  */
+
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     /**
      * DIFFERENT VARIABLES
-      */
+     */
+
     private ImageView imageViewBackground; // ImageView for the background
     private ImageView imageViewSmiley; // ImageView for the smiley
     private ImageButton imageButtonHistory; // ImageButton to access to the mood history
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
+
     private GestureDetectorCompat mDetector; // For swipe
     int mCoolSuperHappySoundID;
     int mCatHappySoundID;
@@ -59,13 +62,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /**
      * an ArrayList to store the smiley imageView and background
-      */
+     */
     ArrayList<Integer> imageList = new ArrayList<>();
 
 
     /**
      * THE METHOD onCreate
-      */
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +92,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
-        mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound,1);
-        mCatHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.purring_cat_sound,1);
+        mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound, 1);
+        mCatHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.purring_cat_sound, 1);
         mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference nature sound
-        mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound,1);
-        mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound,1);
+        mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound, 1);
+        mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound, 1);
 
 
         //add smiley images and background in an ArrayList
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         /*
          * Launch a new activity (HistoryActivity) when click on imageButtonHistory
-          */
+         */
 
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,10 +151,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 okDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-                            Log.d("DEBUG", "enter onClick");
-                            mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
-                            dialog.dismiss(); // close dialog box
+
+                        Log.d("DEBUG", "enter onClick");
+                        mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
+                        dialog.dismiss(); // close dialog box
 
                     }
                 });
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                     @Override
                     public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                    okDialogBtn.setEnabled(s.toString().length() != 0); // Enable the okButton when the length of comment does not equal to zero
+                        okDialogBtn.setEnabled(s.toString().length() != 0); // Enable the okButton when the length of comment does not equal to zero
                     }
 
                     @Override
@@ -181,82 +184,78 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){ // For the good performance of gestureDetector
-        if (this.mDetector.onTouchEvent(event)) {
-            return true;
-        }
-        return super.onTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent event) { // For the good performance of gestureDetector
+        return this.mDetector.onTouchEvent(event) || super.onTouchEvent(event);
+
     }
 
     /**
      * According to the swipe up or down, background and smiley change
-      */
+     */
 
-        public void onSwipe (Boolean isUp ){
-            // String message = ""; // FOR TEST
+    public void onSwipe(Boolean isUp) {
+        // String message = ""; // FOR TEST
 
-               if(isUp) {
-                    if (levelOfMood <= 4 && levelOfMood > 0) {
-                        levelOfMood--;
-                        // message = "Top to Bottom swipe"; // FOR TEST
-                        if (levelOfMood == 4) {
-                            imageViewSmiley.setImageResource(imageList.get(0));
-                            imageViewBackground.setImageResource(imageList.get(1));
-                            playCoolSuperHappySound(imageViewSmiley);
-                        } else if (levelOfMood == 3) {
-                            imageViewSmiley.setImageResource(imageList.get(2));
-                            imageViewBackground.setImageResource(imageList.get(3));
-                            playCatHappySound(imageViewSmiley);
-                        } else if (levelOfMood == 2) {
-                            imageViewSmiley.setImageResource(imageList.get(4));
-                            imageViewBackground.setImageResource(imageList.get(5));
-                            playNatureNormalSound(imageViewSmiley);
-                        } else if (levelOfMood == 1) {
-                            imageViewSmiley.setImageResource(imageList.get(6));
-                            imageViewBackground.setImageResource(imageList.get(7));
-                            playTrainDisappointedSound(imageViewSmiley);
-                        } else if (levelOfMood == 0) {
-                            imageViewSmiley.setImageResource(imageList.get(8));
-                            imageViewBackground.setImageResource(imageList.get(9));
-                            playBrokenGlassSadSound(imageViewSmiley);
-                        }
-                    } }
-
-
-              else  {
-                   if (levelOfMood < 4 && levelOfMood >= 0) {
-                       levelOfMood++;
-                       // message = "Bottom to Top swipe"; // FOR TEST
-                       if (levelOfMood == 4) {
-                           imageViewSmiley.setImageResource(imageList.get(0));
-                           imageViewBackground.setImageResource(imageList.get(1));
-                           playCoolSuperHappySound(imageViewSmiley);
-                       } else if (levelOfMood == 3) {
-                           imageViewSmiley.setImageResource(imageList.get(2));
-                           imageViewBackground.setImageResource(imageList.get(3));
-                           playCatHappySound(imageViewSmiley);
-                       } else if (levelOfMood == 2) {
-                           imageViewSmiley.setImageResource(imageList.get(4));
-                           imageViewBackground.setImageResource(imageList.get(5));
-                           playNatureNormalSound(imageViewSmiley);
-                       } else if (levelOfMood == 1) {
-                           imageViewSmiley.setImageResource(imageList.get(6));
-                           imageViewBackground.setImageResource(imageList.get(7));
-                           playTrainDisappointedSound(imageViewSmiley);
-                       } else if (levelOfMood == 0) {
-                           imageViewSmiley.setImageResource(imageList.get(8));
-                           imageViewBackground.setImageResource(imageList.get(9));
-                           playBrokenGlassSadSound(imageViewSmiley);
-                       }
-                   }
-               }
+        if (isUp) {
+            if (levelOfMood <= 4 && levelOfMood > 0) {
+                levelOfMood--;
+                // message = "Top to Bottom swipe"; // FOR TEST
+                if (levelOfMood == 4) {
+                    imageViewSmiley.setImageResource(imageList.get(0));
+                    imageViewBackground.setImageResource(imageList.get(1));
+                    playCoolSuperHappySound(imageViewSmiley);
+                } else if (levelOfMood == 3) {
+                    imageViewSmiley.setImageResource(imageList.get(2));
+                    imageViewBackground.setImageResource(imageList.get(3));
+                    playCatHappySound(imageViewSmiley);
+                } else if (levelOfMood == 2) {
+                    imageViewSmiley.setImageResource(imageList.get(4));
+                    imageViewBackground.setImageResource(imageList.get(5));
+                    playNatureNormalSound(imageViewSmiley);
+                } else if (levelOfMood == 1) {
+                    imageViewSmiley.setImageResource(imageList.get(6));
+                    imageViewBackground.setImageResource(imageList.get(7));
+                    playTrainDisappointedSound(imageViewSmiley);
+                } else if (levelOfMood == 0) {
+                    imageViewSmiley.setImageResource(imageList.get(8));
+                    imageViewBackground.setImageResource(imageList.get(9));
+                    playBrokenGlassSadSound(imageViewSmiley);
+                }
+            }
+        } else {
+            if (levelOfMood < 4 && levelOfMood >= 0) {
+                levelOfMood++;
+                // message = "Bottom to Top swipe"; // FOR TEST
+                if (levelOfMood == 4) {
+                    imageViewSmiley.setImageResource(imageList.get(0));
+                    imageViewBackground.setImageResource(imageList.get(1));
+                    playCoolSuperHappySound(imageViewSmiley);
+                } else if (levelOfMood == 3) {
+                    imageViewSmiley.setImageResource(imageList.get(2));
+                    imageViewBackground.setImageResource(imageList.get(3));
+                    playCatHappySound(imageViewSmiley);
+                } else if (levelOfMood == 2) {
+                    imageViewSmiley.setImageResource(imageList.get(4));
+                    imageViewBackground.setImageResource(imageList.get(5));
+                    playNatureNormalSound(imageViewSmiley);
+                } else if (levelOfMood == 1) {
+                    imageViewSmiley.setImageResource(imageList.get(6));
+                    imageViewBackground.setImageResource(imageList.get(7));
+                    playTrainDisappointedSound(imageViewSmiley);
+                } else if (levelOfMood == 0) {
+                    imageViewSmiley.setImageResource(imageList.get(8));
+                    imageViewBackground.setImageResource(imageList.get(9));
+                    playBrokenGlassSadSound(imageViewSmiley);
+                }
+            }
         }
-            // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
+    }
+    // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
 
 
     @Override
     public boolean onDown(MotionEvent event) {
-        Log.d(DEBUG_TAG,"onDown: " + event.toString());
+        Log.d(DEBUG_TAG, "onDown: " + event.toString());
         return true;
     }
 
@@ -284,54 +283,54 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /**
      * Permit the vertical swipe
-      */
+     */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-       float deltaX = e2.getX() - e1.getX();
-       float deltaY = e2.getY() - e1.getY();
+        float deltaX = e2.getX() - e1.getX();
+        float deltaY = e2.getY() - e1.getY();
 
-       if(Math.abs(deltaY) > Math.abs(deltaX)) { // Y travels more than X
-           if (e1.getY() < e2.getY()) {
-               Log.d(DEBUG_TAG, "Up to Down swipe performed");
-               onSwipe(true);
-           }
+        if (Math.abs(deltaY) > Math.abs(deltaX)) { // Y travels more than X
+            if (e1.getY() < e2.getY()) {
+                Log.d(DEBUG_TAG, "Up to Down swipe performed");
+                onSwipe(true);
+            }
 
-           if (e1.getY() > e2.getY()) {
-               Log.d(DEBUG_TAG, "Down to Up swipe performed");
-               onSwipe(false);
-           }
-       }
+            if (e1.getY() > e2.getY()) {
+                Log.d(DEBUG_TAG, "Down to Up swipe performed");
+                onSwipe(false);
+            }
+        }
         return true;
     }
 
-    public void playCoolSuperHappySound (View view) {
+    public void playCoolSuperHappySound(View view) {
         Log.d("DEBUG", "Super happy sound played");
-        mSoundPool.play(mCoolSuperHappySoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mCoolSuperHappySoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
-    public void playCatHappySound (View view) {
+    public void playCatHappySound(View view) {
         Log.d("DEBUG", "happy sound played");
-        mSoundPool.play(mCatHappySoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mCatHappySoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
     // To play natureNormalSound
-    public void playNatureNormalSound (View view) {
+    public void playNatureNormalSound(View view) {
         Log.d("DEBUG", "normal sound played");
-        mSoundPool.play(mNatureNormalSoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mNatureNormalSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
-    public void playTrainDisappointedSound (View view) {
+    public void playTrainDisappointedSound(View view) {
         Log.d("DEBUG", "disappointed sound played");
-        mSoundPool.play(mTrainDisappointedSoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mTrainDisappointedSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
-    public void playBrokenGlassSadSound (View view) {
+    public void playBrokenGlassSadSound(View view) {
         Log.d("DEBUG", "Sad sound played");
-        mSoundPool.play(mBrokenGlassSadSoundID,1.0f, 1.0f, 0,0, 1.0f);
+        mSoundPool.play(mBrokenGlassSadSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
 
-    }
+}
 
 
 

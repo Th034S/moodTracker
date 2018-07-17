@@ -1,98 +1,115 @@
 package com.thomas.siadous.moodtracker;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * HistoryActivity class permit to display the mood history
- */
+
+// HistoryActivity class permit to display the mood history
+
+
 public class HistoryActivity extends AppCompatActivity {
 
-    /**
-     * VARIABLES
-     */
+    // VARIABLES
+
     private SharedPreferences mPreferencesHistory;
     private String mComment;
 
-    TextView mSevenDaysAgoTextView;
-    TextView mSixDaysAgoTextView;
-    TextView mFiveDaysAgoTextView;
-    TextView mFourDaysAgoTextView;
-    TextView mThreeDaysAgoTextView;
-    TextView mTwoDaysAgoTextView;
-    TextView mOneDayAgoTextView;
 
-
-    ImageButton mSevenDaysAgoComment;
-    ImageButton mSixDaysAgoComment;
-    ImageButton mFiveDaysAgoComment;
-    ImageButton mFourDaysAgoComment;
-    ImageButton mThreeDaysAgoComment;
-    ImageButton mTwoDaysAgoComment;
-    ImageButton mOneDayAgoComment;
-
-
+    private LinearLayout layoutHistory;
 
     int mColorTest = R.color.banana_yellow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
-        // Reference the textView
-        mSevenDaysAgoTextView = findViewById(R.id.happy_block_textView_history);
-        mSixDaysAgoTextView = findViewById(R.id.super_happy_block_textView_history);
-        mFiveDaysAgoTextView = findViewById(R.id.normal_block_textView_history);
-        mFourDaysAgoTextView = findViewById(R.id.disappointed_block_textView_history);
-        mThreeDaysAgoTextView = findViewById(R.id.sad_block_textView_history);
-        mTwoDaysAgoTextView = findViewById(R.id.disappointed_2_block_textView_history);
-        mOneDayAgoTextView = findViewById(R.id.super_happy_2_block_textView_history);
-
-        // Reference the imageButton
-        mSevenDaysAgoComment = findViewById(R.id.comment_happy_imageButton_history);
-        mSixDaysAgoComment = findViewById(R.id.comment_super_happy_imageButton_history);
-        mFiveDaysAgoComment = findViewById(R.id.comment_normal_imageButton_history);
-        mFourDaysAgoComment = findViewById(R.id.comment_disappointed_imageButton_history);
-        mThreeDaysAgoComment = findViewById(R.id.comment_sad_imageButton_history);
-        mTwoDaysAgoComment = findViewById(R.id.comment_disappointed_2_imageButton_history);
-        mOneDayAgoComment = findViewById(R.id.comment_super_happy_2_imageButton_history);
+        Log.d("DEBUG", "onCreate Method works !");
 
 
-
-        Log.d("DEBUG", "Enter onCreate");
-
-        mSevenDaysAgoComment.setOnClickListener(new View.OnClickListener() {
+        // Reference layoutHistory
+        this.layoutHistory = findViewById(R.id.MyLayoutHistory);
+        ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onClick(View view) {
-                Log.d("DEBUG", "Enter onClick");
-                mPreferencesHistory = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-                mComment = mPreferencesHistory.getString(MainActivity.PREF_KEY_COMMENT, "Comments");
-                Toast msg = Toast.makeText(HistoryActivity.this, mComment, Toast.LENGTH_SHORT);
-                msg.show();
+            public void onGlobalLayout() {
+                init();
+                layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
-        mSevenDaysAgoTextView.setText("Hier");
-
-        //mDisplayComment.setBackgroundResource(R.color.banana_yellow);
 
 
+        double a = 0.2 * 1140;
+        double b = 0.143 * 2296;
+        // Initialize a new CardView
+        CardView cardView = new CardView(getApplicationContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) a, (int) b);
+
+        cardView.setLayoutParams(params);
+        TextView mSevenDaysAgo = new TextView(getApplicationContext());
+        mSevenDaysAgo.setText("Il y a 7 jours");
+        mSevenDaysAgo.setLayoutParams(params);
+
+        ImageButton mCommentSevenDays = new ImageButton(getApplicationContext());
+        mCommentSevenDays.setImageResource(R.drawable.ic_comment_black_48px);
+        mCommentSevenDays.setBackgroundColor(getResources().getColor(R.color.transparent));
+        mCommentSevenDays.setLayoutParams(params);
+
+        cardView.setCardBackgroundColor(getResources().getColor(mColorTest));
+
+        cardView.addView(mCommentSevenDays);
+        cardView.addView(mSevenDaysAgo);
+        layoutHistory.addView(cardView);
+
+
+
+
+
+
+       /* TextView mSevenDaysAgo = new TextView(this);
+        ViewGroup.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160);
+        mSevenDaysAgo.setLayoutParams(layoutParams);
+        mSevenDaysAgo.setText("hello");
+        mSevenDaysAgo.setBackgroundResource(R.color.banana_yellow);
+        layoutHistory.addView(mSevenDaysAgo); */
+
+  /*
+   mSevenDaysAgoComment.setOnClickListener(new View.OnClickListener() {
+  @Override public void onClick(View view) {
+  Log.d("DEBUG", "Enter onClick");
+  mPreferencesHistory = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+  mComment = mPreferencesHistory.getString(MainActivity.PREF_KEY_COMMENT, "Comments");
+  Toast msg = Toast.makeText(HistoryActivity.this, mComment, Toast.LENGTH_SHORT);
+  msg.show();
+  }
+  });
+
+  mSevenDaysAgoTextView.setText("Hier");
+
+ // mDisplayComment.setBackgroundResource(R.color.banana_yellow);
+
+ */
 
     }
-
-    private int dpToPx(int dp) {
-        return Math.round(dp*(getResources().getDisplayMetrics().xdpi/ DisplayMetrics.DENSITY_DEFAULT));
+    protected void init() {
+        int a = layoutHistory.getHeight();
+        int b = layoutHistory.getWidth();
+        Toast.makeText(HistoryActivity.this, " Height " + a + "Width " + b, Toast.LENGTH_LONG).show();
     }
-
-
 
 
 }
