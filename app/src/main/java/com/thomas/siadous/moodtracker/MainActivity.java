@@ -1,8 +1,6 @@
 package com.thomas.siadous.moodtracker;
 
-/**
- * IMPORTS
- */
+ // IMPORTS
 
 import android.app.Dialog;
 import android.content.Context;
@@ -24,21 +22,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-
-/**
- * MainActivity class, permit to access : to the different moods with the swipe
- */
-
+ // MainActivity class, permit to access : to the different moods with the swipe
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
-    /**
-     * DIFFERENT VARIABLES
-     */
+    // DIFFERENT VARIABLES
 
     private ImageView imageViewBackground; // ImageView for the background
     private ImageView imageViewSmiley; // ImageView for the smiley
@@ -51,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int levelOfMood = 3; // On what mood we are positioned / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
-
     private GestureDetectorCompat mDetector; // For swipe
     int mCoolSuperHappySoundID;
     int mCatHappySoundID;
@@ -60,23 +49,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int mBrokenGlassSadSoundID;
     SoundPool mSoundPool; // For sounds
 
-    /**
-     * an ArrayList to store the smiley imageView and background
-     */
+     // an ArrayList to store the smiley imageView and background
+
     ArrayList<Integer> imageList = new ArrayList<>();
 
+     // THE METHOD onCreate
 
-    /**
-     * THE METHOD onCreate
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-           reference the elements of layout
-          */
+        // reference the elements of layout
         imageViewBackground = findViewById(R.id.imageView_background);
         imageViewSmiley = findViewById(R.id.imageView_happy);
         imageButtonHistory = findViewById(R.id.imageButton_history);
@@ -85,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         final Context context = this; // context constant
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
-
 
         final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); // Format for date
         final String limitTime = "00:00:00"; // limit hour to save mood
@@ -97,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference nature sound
         mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound, 1);
         mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound, 1);
-
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy);
@@ -113,10 +95,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         Log.d(DEBUG_TAG, "Log works"); // Log d FOR TEST
 
-        /*
-         * Launch a new activity (HistoryActivity) when click on imageButtonHistory
-         */
-
+        // Launch a new activity (HistoryActivity) when click on imageButtonHistory
         imageButtonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                 });
 
-
                 okDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -161,41 +139,31 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                 dialog.show();
 
+                // until a character is entered, the button remains disabled
                 editComment.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int i, int i1, int i2) {
                         okDialogBtn.setEnabled(s.toString().length() != 0); // Enable the okButton when the length of comment does not equal to zero
                     }
-
                     @Override
                     public void afterTextChanged(Editable editable) {
-
                     }
                 });
             }
         });
-
-
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) { // For the good performance of gestureDetector
         return this.mDetector.onTouchEvent(event) || super.onTouchEvent(event);
-
     }
 
-    /**
-     * According to the swipe up or down, background and smiley change
-     */
-
+    // According to the swipe up or down, background and smiley change
     public void onSwipe(Boolean isUp) {
         // String message = ""; // FOR TEST
-
         if (isUp) {
             if (levelOfMood <= 4 && levelOfMood > 0) {
                 levelOfMood--;
@@ -252,38 +220,31 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
     // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
 
-
     @Override
     public boolean onDown(MotionEvent event) {
         Log.d(DEBUG_TAG, "onDown: " + event.toString());
         return true;
     }
-
     @Override
     public void onShowPress(MotionEvent event) {
         Log.d(DEBUG_TAG, "onShowPress: " + event.toString());
     }
-
     @Override
     public boolean onSingleTapUp(MotionEvent event) {
         Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
         return true;
     }
-
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float vX, float vY) {
         Log.d(DEBUG_TAG, "onScroll: " + event1.toString() + event2.toString());
         return true;
     }
-
     @Override
     public void onLongPress(MotionEvent event) {
         Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
-    /**
-     * Permit the vertical swipe
-     */
+    // Permit the vertical swipe
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         float deltaX = e2.getX() - e1.getX();
@@ -303,27 +264,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return true;
     }
 
+    // METHODS TO PLAY MOOD SOUNDS
+
+    // Method who play the sound corresponding to the super happy mood
     public void playCoolSuperHappySound(View view) {
         Log.d("DEBUG", "Super happy sound played");
         mSoundPool.play(mCoolSuperHappySoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
+    // Method who play the sound corresponding to the happy mood
     public void playCatHappySound(View view) {
         Log.d("DEBUG", "happy sound played");
         mSoundPool.play(mCatHappySoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
-    // To play natureNormalSound
+    // Method who play the sound corresponding to the normal mood
     public void playNatureNormalSound(View view) {
         Log.d("DEBUG", "normal sound played");
         mSoundPool.play(mNatureNormalSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
+    // Method who play the sound corresponding to the disappointed mood
     public void playTrainDisappointedSound(View view) {
         Log.d("DEBUG", "disappointed sound played");
         mSoundPool.play(mTrainDisappointedSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
+    // Method who play the sound corresponding to the sad mood
     public void playBrokenGlassSadSound(View view) {
         Log.d("DEBUG", "Sad sound played");
         mSoundPool.play(mBrokenGlassSadSoundID, 1.0f, 1.0f, 0, 0, 1.0f);

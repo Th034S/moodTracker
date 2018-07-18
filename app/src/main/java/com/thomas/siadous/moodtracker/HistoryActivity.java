@@ -31,6 +31,9 @@ public class HistoryActivity extends AppCompatActivity {
 
     int mColorTest = R.color.banana_yellow;
 
+    int a;
+    int b;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
@@ -41,6 +44,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
+
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -52,12 +56,12 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
-        double a = 0.2 * 1140;
-        double b = 0.143 * 2296;
+        double c = 0.2 * 1140;
+        double d = 0.143 * 2296;
         // Initialize a new CardView
         CardView cardView = new CardView(getApplicationContext());
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) a, (int) b);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)(0.2*a), (int)(0.143*b));
 
         cardView.setLayoutParams(params);
         TextView mSevenDaysAgo = new TextView(getApplicationContext());
@@ -74,8 +78,6 @@ public class HistoryActivity extends AppCompatActivity {
         cardView.addView(mCommentSevenDays);
         cardView.addView(mSevenDaysAgo);
         layoutHistory.addView(cardView);
-
-
 
 
 
@@ -105,10 +107,11 @@ public class HistoryActivity extends AppCompatActivity {
  */
 
     }
+    // To obtain the width and the height of the layout
     protected void init() {
-        int a = layoutHistory.getHeight();
-        int b = layoutHistory.getWidth();
-        Toast.makeText(HistoryActivity.this, " Height " + a + "Width " + b, Toast.LENGTH_LONG).show();
+        a = layoutHistory.getHeight();
+        b = layoutHistory.getWidth();
+        Toast.makeText(HistoryActivity.this, " Height " + a + " Width " + b, Toast.LENGTH_LONG).show();
     }
 
 
