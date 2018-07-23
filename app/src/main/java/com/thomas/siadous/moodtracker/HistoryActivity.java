@@ -1,5 +1,5 @@
 package com.thomas.siadous.moodtracker;
-
+// IMPORTS
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,15 +17,11 @@ import android.widget.Toast;
 
 
 // HistoryActivity class permit to display the mood history
-
-
 public class HistoryActivity extends AppCompatActivity {
 
     // VARIABLES
-
     private SharedPreferences mPreferencesHistory;
     private String mComment;
-
 
     private LinearLayout layoutHistory;
 
@@ -41,7 +37,6 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         Log.d("DEBUG", "onCreate Method works !");
 
-
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
 
@@ -53,8 +48,6 @@ public class HistoryActivity extends AppCompatActivity {
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-
-
 
         double c = 0.2 * 1140;
         double d = 0.143 * 2296;
