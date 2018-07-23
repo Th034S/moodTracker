@@ -15,8 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 
-// HistoryActivity class permit to display the mood history
 public class HistoryActivity extends AppCompatActivity {
 
     // VARIABLES
@@ -26,9 +26,11 @@ public class HistoryActivity extends AppCompatActivity {
     private LinearLayout layoutHistory;
 
     int mColorTest = R.color.banana_yellow;
+    int a = 0;
+    int b = 0;
 
-    int a;
-    int b;
+    ArrayList<Integer> listColorBackground = new ArrayList<>(5);
+    int moodLevel[] = {0, 1, 2, 3, 4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,13 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         Log.d("DEBUG", "onCreate Method works !");
 
+        listColorBackground.add(0, R.color.banana_yellow);
+        listColorBackground.add(1, R.color.light_sage);
+        listColorBackground.add(2, R.color.cornflower_blue_65);
+        listColorBackground.add(3, R.color.warm_grey);
+        listColorBackground.add(4, R.color.faded_red);
+
+
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
 
@@ -44,36 +53,29 @@ public class HistoryActivity extends AppCompatActivity {
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+
                 init();
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
+                CardView cardView = new CardView(getApplicationContext());
+
+                for(int i = 0; i < 7; i++) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (0.2 * b), (int) (0.143 * a));
+
+                    cardView.setLayoutParams(params);
+                    TextView mHistoryBlock = new TextView(getApplicationContext());
+                    mHistoryBlock.setLayoutParams(params);
+
+                cardView.setCardBackgroundColor(getResources().getColor(mColorTest));
+
+             // cardView.addView(mCommentSevenDays);
+                cardView.addView(mHistoryBlock);
+                layoutHistory.addView(cardView);
+            } }
         });
 
         double c = 0.2 * 1140;
         double d = 0.143 * 2296;
         // Initialize a new CardView
-        CardView cardView = new CardView(getApplicationContext());
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)(0.2*a), (int)(0.143*b));
-
-        cardView.setLayoutParams(params);
-        TextView mSevenDaysAgo = new TextView(getApplicationContext());
-        mSevenDaysAgo.setText("Il y a 7 jours");
-        mSevenDaysAgo.setLayoutParams(params);
-
-        ImageButton mCommentSevenDays = new ImageButton(getApplicationContext());
-        mCommentSevenDays.setImageResource(R.drawable.ic_comment_black_48px);
-        mCommentSevenDays.setBackgroundColor(getResources().getColor(R.color.transparent));
-        mCommentSevenDays.setLayoutParams(params);
-
-        cardView.setCardBackgroundColor(getResources().getColor(mColorTest));
-
-        cardView.addView(mCommentSevenDays);
-        cardView.addView(mSevenDaysAgo);
-        layoutHistory.addView(cardView);
-
-
-
 
        /* TextView mSevenDaysAgo = new TextView(this);
         ViewGroup.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160);
@@ -98,7 +100,10 @@ public class HistoryActivity extends AppCompatActivity {
  // mDisplayComment.setBackgroundResource(R.color.banana_yellow);
 
  */
-
+                                               //   ImageButton mCommentSevenDays = new ImageButton(getApplicationContext());
+                                               //   mCommentSevenDays.setImageResource(R.drawable.ic_comment_black_48px);
+                                               //   mCommentSevenDays.setBackgroundColor(getResources().getColor(R.color.transparent));
+                                               //   mCommentSevenDays.setLayoutParams(params);
     }
     // To obtain the width and the height of the layout
     protected void init() {

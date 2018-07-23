@@ -24,7 +24,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-// MainActivity class, permit to access : to the different moods with the swipe
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     // DIFFERENT VARIABLES
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private SharedPreferences mPreferences; // Use to store data
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
+    public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
     int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
@@ -283,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         Log.d("DEBUG", "Sad sound played");
         mSoundPool.play(mBrokenGlassSadSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
-
 }
 
 
