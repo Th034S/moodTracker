@@ -20,7 +20,8 @@ import java.util.ArrayList;
 public class HistoryActivity extends AppCompatActivity {
 
     // VARIABLES
-    private SharedPreferences mPreferencesHistory;
+    private SharedPreferences mPreferencesComment;
+    private SharedPreferences mPreferencesMoodLevel;
     private String mComment;
 
     private LinearLayout layoutHistory;
@@ -30,35 +31,37 @@ public class HistoryActivity extends AppCompatActivity {
     int b = 0;
 
     ArrayList<Integer> listColorBackground = new ArrayList<>(5);
-    int moodLevel[] = {0, 1, 2, 3, 4};
+    int mMoodLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        Log.d("DEBUG", "onCreate Method works !");
-
-        listColorBackground.add(0, R.color.banana_yellow);
-        listColorBackground.add(1, R.color.light_sage);
-        listColorBackground.add(2, R.color.cornflower_blue_65);
-        listColorBackground.add(3, R.color.warm_grey);
-        listColorBackground.add(4, R.color.faded_red);
-
 
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
+        mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+
+        listColorBackground.add(4, R.color.banana_yellow);
+        listColorBackground.add(3, R.color.light_sage);
+        listColorBackground.add(2, R.color.cornflower_blue_65);
+        listColorBackground.add(1, R.color.warm_grey);
+        listColorBackground.add(0, R.color.faded_red);
+
+        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
+        System.out.println(mMoodLevel);
+        Log.d("DEBUG", "onCreate Method works !");
 
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-
+                Log.d("DEBUG", "onGlobalLayout works");
                 init();
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 CardView cardView = new CardView(getApplicationContext());
 
-                for(int i = 0; i < 7; i++) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (0.2 * b), (int) (0.143 * a));
 
                     cardView.setLayoutParams(params);
@@ -70,11 +73,9 @@ public class HistoryActivity extends AppCompatActivity {
              // cardView.addView(mCommentSevenDays);
                 cardView.addView(mHistoryBlock);
                 layoutHistory.addView(cardView);
-            } }
+            }
         });
 
-        double c = 0.2 * 1140;
-        double d = 0.143 * 2296;
         // Initialize a new CardView
 
        /* TextView mSevenDaysAgo = new TextView(this);

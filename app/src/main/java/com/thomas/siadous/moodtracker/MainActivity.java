@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
+    public final static String PREF_KEY_DAY = "PREF_KEY_DAY";
     int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     // An ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
+
+    int mDay;
+    int mDay2;
 
     // THE METHOD onCreate
     @Override
@@ -66,8 +71,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
-        // final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); // Format for date
-        // final String limitTime = "00:00:00"; // limit hour to save mood
+        final Calendar c = Calendar.getInstance();
+        mDay = c.get(Calendar.DAY_OF_MONTH); // Store the day of month
+        mDay2 = mDay;
+
+
+
 
         mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
@@ -147,6 +156,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 });
             }
         });
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        if (mDay2 != mDay) {
+            mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+        }
     }
 
     @Override
