@@ -35,22 +35,23 @@ public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
+        Log.d("DEBUG", "my on Create works");
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
         mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-
-        listColorBackground.add(4, R.color.banana_yellow);
-        listColorBackground.add(3, R.color.light_sage);
-        listColorBackground.add(2, R.color.cornflower_blue_65);
-        listColorBackground.add(1, R.color.warm_grey);
+        Log.d("DEBUG", "ON CREATE WORKS");
         listColorBackground.add(0, R.color.faded_red);
-
-        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
-        System.out.println(mMoodLevel);
+        listColorBackground.add(1, R.color.warm_grey);
+        listColorBackground.add(2, R.color.cornflower_blue_65);
+        listColorBackground.add(3, R.color.light_sage);
+        listColorBackground.add(4, R.color.banana_yellow);
+//
+        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 1);
+        System.out.println(mMoodLevel + " TEST for history");
         Log.d("DEBUG", "onCreate Method works !");
 
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
@@ -96,15 +97,7 @@ public class HistoryActivity extends AppCompatActivity {
   }
   });
 
-  mSevenDaysAgoTextView.setText("Hier");
-
- // mDisplayComment.setBackgroundResource(R.color.banana_yellow);
-
  */
-                                               //   ImageButton mCommentSevenDays = new ImageButton(getApplicationContext());
-                                               //   mCommentSevenDays.setImageResource(R.drawable.ic_comment_black_48px);
-                                               //   mCommentSevenDays.setBackgroundColor(getResources().getColor(R.color.transparent));
-                                               //   mCommentSevenDays.setLayoutParams(params);
     }
     // To obtain the width and the height of the layout
     protected void init() {

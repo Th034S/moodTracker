@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
     public final static String PREF_KEY_DAY = "PREF_KEY_DAY";
-    int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
+
+    public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
 
     private GestureDetectorCompat mDetector; // For swipe
@@ -73,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         final Calendar c = Calendar.getInstance();
         mDay = c.get(Calendar.DAY_OF_MONTH); // Store the day of month
-        mDay2 = mDay;
-
-
-
 
         mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
@@ -86,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference sound for normal mood
         mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound, 1); // Reference sound for disappointed mood
         mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound, 1); // Reference sound for sad mood
+
+        System.out.println(levelOfMood);
 
         //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy); // Add super happy smiley
@@ -157,9 +156,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
         mDay = c.get(Calendar.DAY_OF_MONTH);
-        if (mDay2 != mDay) {
-            mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
-        }
+        System.out.println("mDay " + mDay);
+        System.out.println("mDay2 " + mDay2);
+        System.out.println(levelOfMood + " toto");
+
+
     }
 
     @Override
@@ -257,14 +258,24 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         float deltaY = e2.getY() - e1.getY();
 
         if (Math.abs(deltaY) > Math.abs(deltaX)) { // Y travels more than X
+            final Calendar c = Calendar.getInstance(); // Initialize Calendar
             if (e1.getY() < e2.getY()) {
                 Log.d(DEBUG_TAG, "Up to Down swipe performed");
                 onSwipe(true);
+                System.out.println(levelOfMood + " TEST");
+                if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
+                    mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                }
             }
 
             if (e1.getY() > e2.getY()) {
                 Log.d(DEBUG_TAG, "Down to Up swipe performed");
                 onSwipe(false);
+                System.out.println(levelOfMood + " TEST 2");
+
+                if(mDay == c.get(Calendar.DAY_OF_MONTH)) {
+                    mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                }
             }
         }
         return true;
