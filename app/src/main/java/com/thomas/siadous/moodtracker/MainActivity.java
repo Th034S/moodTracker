@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
-    public final static String PREF_KEY_DAY = "PREF_KEY_DAY";
 
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
@@ -53,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     // An ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
 
-    int mDay;
-    int mDay2;
+    int mDay; // To store the day
 
     // THE METHOD onCreate
     @Override
@@ -133,8 +131,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 okDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        final Calendar c = Calendar.getInstance();
                         Log.d("DEBUG", "onClick works"); // FOR TEST
-                        mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
+                        if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
+                            mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
+                        }
                         dialog.dismiss(); // close dialog box
                     }
                 });
@@ -157,9 +158,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
         mDay = c.get(Calendar.DAY_OF_MONTH);
         System.out.println("mDay " + mDay);
-        System.out.println("mDay2 " + mDay2);
         System.out.println(levelOfMood + " toto");
-
 
     }
 

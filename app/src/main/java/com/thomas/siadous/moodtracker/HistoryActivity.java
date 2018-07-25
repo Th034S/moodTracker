@@ -23,6 +23,7 @@ public class HistoryActivity extends AppCompatActivity {
     private SharedPreferences mPreferencesComment;
     private SharedPreferences mPreferencesMoodLevel;
     private String mComment;
+    private int mMoodLevel;
 
     private LinearLayout layoutHistory;
 
@@ -31,7 +32,7 @@ public class HistoryActivity extends AppCompatActivity {
     int b = 0;
 
     ArrayList<Integer> listColorBackground = new ArrayList<>(5);
-    int mMoodLevel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class HistoryActivity extends AppCompatActivity {
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
         mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+        mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         Log.d("DEBUG", "ON CREATE WORKS");
         listColorBackground.add(0, R.color.faded_red);
         listColorBackground.add(1, R.color.warm_grey);
@@ -50,11 +52,14 @@ public class HistoryActivity extends AppCompatActivity {
         listColorBackground.add(3, R.color.light_sage);
         listColorBackground.add(4, R.color.banana_yellow);
 //
-        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 1);
+        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
         System.out.println(mMoodLevel + " TEST for history");
+        mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "None comment");
+        System.out.println(mComment + " TEST for History");
+
         Log.d("DEBUG", "onCreate Method works !");
 
-        ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
+        ViewTreeObserver observer = layoutHistory.getViewTreeObserver();  // to calculate the screen size
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -63,13 +68,13 @@ public class HistoryActivity extends AppCompatActivity {
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 CardView cardView = new CardView(getApplicationContext());
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (0.2 * b), (int) (0.143 * a));
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((mMoodLevel + 1) * 0.2 * b), (int) (0.143 * a));
 
                     cardView.setLayoutParams(params);
                     TextView mHistoryBlock = new TextView(getApplicationContext());
                     mHistoryBlock.setLayoutParams(params);
 
-                cardView.setCardBackgroundColor(getResources().getColor(mColorTest));
+                cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel)));
 
              // cardView.addView(mCommentSevenDays);
                 cardView.addView(mHistoryBlock);
