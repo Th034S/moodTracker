@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private SharedPreferences mPreferences; // Use to store data
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
+    public final static String PREF_KEY_DAY = "PREF_KEY_DAY";
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
 
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
@@ -71,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
         final Calendar c = Calendar.getInstance();
-        mDay = c.get(Calendar.DAY_OF_MONTH); // Store the day of month
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mPreferences.edit().putInt(PREF_KEY_DAY, mDay).apply();
+
 
         mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
@@ -171,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public void onSwipe(Boolean isUp) {
         // String message = ""; // FOR TEST
         if (isUp) {
+
+
             if (levelOfMood <= 4 && levelOfMood > 0) {
                 levelOfMood--;
                 // message = "Top to Bottom swipe"; // FOR TEST
@@ -197,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
             }
         } else {
+            final Calendar c = Calendar.getInstance();
+
             if (levelOfMood < 4 && levelOfMood >= 0) {
                 levelOfMood++;
                 // message = "Bottom to Top swipe"; // FOR TEST
@@ -264,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 System.out.println(levelOfMood + " TEST");
                 if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                    System.out.println(mDay + "  TEST !!!");
+                    System.out.println(c.get(Calendar.DAY_OF_MONTH) + " TEST !!!");
                 }
             }
 
@@ -274,6 +283,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                 if(mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                    System.out.println(mDay + "  TEST !!!");
+                    System.out.println(c.get(Calendar.DAY_OF_MONTH) + " TEST !!!");
                 }
             }
         }
