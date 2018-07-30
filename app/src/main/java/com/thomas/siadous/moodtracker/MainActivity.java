@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     ArrayList<Integer> imageList = new ArrayList<>();
 
     int mDay; // To store the day
+
 
     // THE METHOD onCreate
     @Override

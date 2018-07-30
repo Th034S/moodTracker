@@ -1,57 +1,49 @@
 package com.thomas.siadous.moodtracker;
+
 // IMPORTS
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class HistoryActivity extends AppCompatActivity {
 
     // VARIABLES
-    private SharedPreferences mPreferencesComment;
-    private SharedPreferences mPreferencesMoodLevel;
-    private SharedPreferences mPreferencesDay;
+    private SharedPreferences mPreferencesComment; // to recover comment of mainActivity
+    private SharedPreferences mPreferencesMoodLevel; // to recover mood level of mainActivity
+    private SharedPreferences mPreferencesDay; // to recover the day of mainActivity
 
-    private String mComment;
-    private int mMoodLevel;
-    private int mDays;
+    private String mComment; // to store comment of preference
+    private int mMoodLevel;  // to store moodLevel of preference
+    private int mDays;       // to store the day of preference
 
-    private LinearLayout layoutHistory;
+    private LinearLayout layoutHistory; // state LinearLayout
 
-    int a = 0;
-    int b = 0;
+    int a = 0; // height of screen
+    int b = 0; // width of screen
 
-    ArrayList<Integer> listColorBackground = new ArrayList<>(5);
-
+    ArrayList<Integer> listColorBackground = new ArrayList<>(5); // state arrayList who will store the five color
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+     //   requestWindowFeature(Window.FEATURE_ACTION_BAR);   // ?????
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        Log.d("DEBUG", "ON CREATE WORKS for history");
+        Log.d("DEBUG", "ON CREATE WORKS for history"); // FOR TEST
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
         mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         mPreferencesDay = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-
 
         listColorBackground.add(0, R.color.faded_red);
         listColorBackground.add(1, R.color.warm_grey);
@@ -77,25 +69,24 @@ public class HistoryActivity extends AppCompatActivity {
                 Log.d("DEBUG", "onGlobalLayout works");
 
 
-                    init();
+                    init(); // call method init to calculate the size of the screen
                     layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     Log.d("DEBUG", "Oh yeah");
-                    CardView cardView = new CardView(getApplicationContext());
+                    CardView cardView = new CardView(getApplicationContext()); // Declare CardView
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((mMoodLevel + 1) * 0.2 * b), (int) (0.143 * a));
 
                     cardView.setLayoutParams(params);
-                    TextView mHistoryBlock = new TextView(getApplicationContext());
+                    TextView mHistoryBlock = new TextView(getApplicationContext()); // Declare textView
 
-                    Log.d("DEBUG", "YES");
                     mHistoryBlock.setLayoutParams(params);
 
-                    ImageButton commentImageButton = new ImageButton(getApplicationContext());
-                    commentImageButton.setImageResource(R.drawable.ic_comment_black_48px);
-                    commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent));
-                   
+                    ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
+                    commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
+                    commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
+
                     Log.d("DEBUG", "Always works !!");
-                    cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel)));
+                    cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel))); // change background of cardView
 /*
                         Log.d("DEBUG", "condition enter");
                         commentImageButton.setOnClickListener(new View.OnClickListener() {
@@ -109,40 +100,21 @@ public class HistoryActivity extends AppCompatActivity {
 */
                   //  cardView.addView(commentImageButton);
 
-                    cardView.addView(mHistoryBlock);
-                    cardView.addView(commentImageButton);
-                    layoutHistory.addView(cardView);
+                    cardView.addView(mHistoryBlock); // to add mHistoryBlock to the cardView
+                    cardView.addView(commentImageButton); // to add commentImageButton to the cardView
+                    layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
 
 
 
-                  //  mPreferencesDay.edit().clear().apply();
-                    // TEST
-             /*
-                if(differenceDayTrue) {
-
-                    init();
-                    layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                    CardView cardView2 = new CardView(getApplicationContext());
-                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams((int) ((mMoodLevel + 1) * 0.2 * b), (int) (0.143 * a));
-                    cardView2.setLayoutParams(params2);
-                    TextView mHistoryBlock2 = new TextView(getApplicationContext());
-                    mHistoryBlock2.setLayoutParams(params2);
-                    cardView2.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel)));
-                    cardView2.addView(mHistoryBlock2);
-                    layoutHistory.addView(cardView2);
-                }
-             */
             }
         });
 
 
-
     }
-    // To obtain the width and the height of the layout
+    // method init o obtain the width and the height of the layout
     protected void init() {
-        a = layoutHistory.getHeight();
-        b = layoutHistory.getWidth();
+        a = layoutHistory.getHeight(); // to obtain height
+        b = layoutHistory.getWidth();  // to obtain width
         Toast.makeText(HistoryActivity.this, " Height " + a + " Width " + b, Toast.LENGTH_LONG).show();
     }
 
