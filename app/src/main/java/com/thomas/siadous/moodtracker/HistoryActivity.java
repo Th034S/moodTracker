@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -14,16 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity  {
 
-    // VARIABLES
-    private SharedPreferences mPreferencesComment; // to recover comment of mainActivity
-    private SharedPreferences mPreferencesMoodLevel; // to recover mood level of mainActivity
-    private SharedPreferences mPreferencesDay; // to recover the day of mainActivity
-
-    private String mComment; // to store comment of preference
-    private int mMoodLevel;  // to store moodLevel of preference
-    private int mDays;       // to store the day of preference
 
     private LinearLayout layoutHistory; // state LinearLayout
 
@@ -35,15 +28,14 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-     //   requestWindowFeature(Window.FEATURE_ACTION_BAR);   // ?????
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         Log.d("DEBUG", "ON CREATE WORKS for history"); // FOR TEST
         // Reference layoutHistory
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);
-        mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-        mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-        mPreferencesDay = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+        SharedPreferences mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+        SharedPreferences mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+        SharedPreferences mPreferencesDay = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
 
         listColorBackground.add(0, R.color.faded_red);
         listColorBackground.add(1, R.color.warm_grey);
@@ -51,11 +43,11 @@ public class HistoryActivity extends AppCompatActivity {
         listColorBackground.add(3, R.color.light_sage);
         listColorBackground.add(4, R.color.banana_yellow);
 //
-        mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
+        final int mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
         System.out.println(mMoodLevel + " TEST for history");
-        mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "Comment");
+        final String mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "Comment");
         System.out.println(mComment + " TEST for History");
-        mDays = mPreferencesDay.getInt(MainActivity.PREF_KEY_DAY, 0);
+        final int mDays = mPreferencesDay.getInt(MainActivity.PREF_KEY_DAY, 0);
         System.out.println(mDays + " DAY : TEST FOR HISTORY");
 
         final Calendar c = Calendar.getInstance();
@@ -67,7 +59,6 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 Log.d("DEBUG", "onGlobalLayout works");
-
 
                     init(); // call method init to calculate the size of the screen
                     layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -84,11 +75,13 @@ public class HistoryActivity extends AppCompatActivity {
                     ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
                     commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
                     commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
+                    commentImageButton.setPadding(30,5,15,5);
+
 
                     Log.d("DEBUG", "Always works !!");
                     cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel))); // change background of cardView
-/*
-                        Log.d("DEBUG", "condition enter");
+
+
                         commentImageButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -97,26 +90,20 @@ public class HistoryActivity extends AppCompatActivity {
                                 msg.show();
                             }
                         });
-*/
-                  //  cardView.addView(commentImageButton);
 
                     cardView.addView(mHistoryBlock); // to add mHistoryBlock to the cardView
                     cardView.addView(commentImageButton); // to add commentImageButton to the cardView
                     layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
 
-
-
             }
         });
-
-
     }
+
     // method init o obtain the width and the height of the layout
     protected void init() {
         a = layoutHistory.getHeight(); // to obtain height
         b = layoutHistory.getWidth();  // to obtain width
         Toast.makeText(HistoryActivity.this, " Height " + a + " Width " + b, Toast.LENGTH_LONG).show();
     }
-
-
+    
 }

@@ -27,10 +27,10 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     // DIFFERENT VARIABLES
-    private ImageView imageViewBackground; // ImageView for the background
-    private ImageView imageViewSmiley; // ImageView for the smiley
-    private ImageButton imageButtonHistory; // ImageButton to access to the mood history
-    private ImageButton imageButtonComments; // ImageButton to add comments
+    private ImageView imageViewBackground; // State ImageView for the background
+    private ImageView imageViewSmiley; // State ImageView for the smiley
+    private ImageButton imageButtonHistory; // State ImageButton to access to the mood history
+    private ImageButton imageButtonComments; // State ImageButton to add comments
 
     private SharedPreferences mPreferences; // Use to store data
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int mNatureNormalSoundID; // Sound id for normal mood
     int mTrainDisappointedSoundID; // Sound id for disappointed mood
     int mBrokenGlassSadSoundID; // Sound id for sad mood
-    SoundPool mSoundPool; // For sounds
+    SoundPool mSoundPool; // State for sounds
 
     // An ArrayList to store the smiley imageView and background
     ArrayList<Integer> imageList = new ArrayList<>();
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mPreferences.edit().putInt(PREF_KEY_DAY, mDay).apply();
 
 
-        mSoundPool = new SoundPool(7, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
+        mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
 
         // Reference the different sounds
         mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound, 1); // Reference sound for super happy mood
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         System.out.println(levelOfMood);
 
-        //add smiley images and background in an ArrayList
+        //add smiley images and background in an ArrayList // réduire
         imageList.add(0, R.drawable.smiley_super_happy); // Add super happy smiley
         imageList.add(1, R.color.banana_yellow); // Add banana yellow color for super happy smiley
         imageList.add(2, R.drawable.smiley_happy); // Add happy smiley
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         // dialog box to add comments appears when clicked
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {  // réduiure
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.dialog_box_comments);
                 //References
