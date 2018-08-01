@@ -2,7 +2,6 @@ package com.thomas.siadous.moodtracker;
 
 // IMPORTS
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private SharedPreferences mPreferences; // Use to store data
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
-    public final static String PREF_KEY_DAY = "PREF_KEY_DAY";
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
 
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
@@ -54,40 +52,43 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     int mDay; // To store the day
 
-
     // THE METHOD onCreate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        referenceElementLayout();
 
-        // Reference the elements of layout
-        imageViewBackground = findViewById(R.id.imageView_background); // Reference ImageView for background
-        imageViewSmiley = findViewById(R.id.imageView_happy); // Reference ImageView for mood smiley
-        imageButtonHistory = findViewById(R.id.imageButton_history); // Reference ImageButton for access to history
-        imageButtonComments = findViewById(R.id.imageButton_comments); // Reference ImageButton to add comments
-
-        final Context context = this; // context constant
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
         final Calendar c = Calendar.getInstance();
         mDay = c.get(Calendar.DAY_OF_MONTH);
-        mPreferences.edit().putInt(PREF_KEY_DAY, mDay).apply();
-
 
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
+        referenceSound();
 
-        // Reference the different sounds
-        mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound, 1); // Reference sound for super happy mood
-        mCatHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.purring_cat_sound, 1); // Reference sound for happy mood
-        mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference sound for normal mood
-        mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound, 1); // Reference sound for disappointed mood
-        mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound, 1); // Reference sound for sad mood
+        addToImageList();
 
-        System.out.println(levelOfMood);
+        // Launch a new activity (HistoryActivity) when click on imageButtonHistory
+        imageButtonHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(historyActivityIntent);
+            }
+        });
 
-        //add smiley images and background in an ArrayList // réduire
+       manageDialogBox();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) { // For the good performance of gestureDetector
+        return this.mDetector.onTouchEvent(event) || super.onTouchEvent(event);
+    }
+
+    private void addToImageList() {
+        //add smiley images and background in an ArrayList
         imageList.add(0, R.drawable.smiley_super_happy); // Add super happy smiley
         imageList.add(1, R.color.banana_yellow); // Add banana yellow color for super happy smiley
         imageList.add(2, R.drawable.smiley_happy); // Add happy smiley
@@ -98,23 +99,31 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageList.add(7, R.color.warm_grey); // Add warm grey color for disappointed smiley
         imageList.add(8, R.drawable.smiley_sad); // Add sad smiley
         imageList.add(9, R.color.faded_red); // Add faded red color for sad smiley
+    }
 
-        Log.d(DEBUG_TAG, "Log works"); // Log d to learn how to use log // TEST
+    private void referenceSound() {
+        // Reference the different sounds
+        mCoolSuperHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.cool_sound, 1); // Reference sound for super happy mood
+        mCatHappySoundID = mSoundPool.load(getApplicationContext(), R.raw.purring_cat_sound, 1); // Reference sound for happy mood
+        mNatureNormalSoundID = mSoundPool.load(getApplicationContext(), R.raw.bird_and_nature_sound, 1); // Reference sound for normal mood
+        mTrainDisappointedSoundID = mSoundPool.load(getApplicationContext(), R.raw.train_sound, 1); // Reference sound for disappointed mood
+        mBrokenGlassSadSoundID = mSoundPool.load(getApplicationContext(), R.raw.broken_glass_sound, 1); // Reference sound for sad mood
+    }
 
-        // Launch a new activity (HistoryActivity) when click on imageButtonHistory
-        imageButtonHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                startActivity(historyActivityIntent);
-                Log.d(DEBUG_TAG, "onClick works"); // Log for TEST
-            }
-        });
+    private void referenceElementLayout() {
+        // Reference the elements of layout
+        imageViewBackground = findViewById(R.id.imageView_background); // Reference ImageView for background
+        imageViewSmiley = findViewById(R.id.imageView_happy); // Reference ImageView for mood smiley
+        imageButtonHistory = findViewById(R.id.imageButton_history); // Reference ImageButton for access to history
+        imageButtonComments = findViewById(R.id.imageButton_comments); // Reference ImageButton to add comments
+    }
+
+    private void manageDialogBox() {
         // dialog box to add comments appears when clicked
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {  // réduiure
-                final Dialog dialog = new Dialog(context);
+                final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.dialog_box_comments);
                 //References
                 TextView titleComment = dialog.findViewById(R.id.title_dialog); // title of the dialog box
@@ -135,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     @Override
                     public void onClick(View view) {
                         final Calendar c = Calendar.getInstance();
-                        Log.d("DEBUG", "onClick works"); // FOR TEST
                         if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                             mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
                         }
@@ -143,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                 });
                 dialog.show();
-
                 // until a character is entered, the button remains disabled
                 editComment.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -159,102 +166,67 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 });
             }
         });
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        System.out.println("mDay " + mDay);
-        System.out.println(levelOfMood + " toto");
-
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) { // For the good performance of gestureDetector
-        return this.mDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     // According to the swipe up or down, background and smiley change
     public void onSwipe(Boolean isUp) {
-        // String message = ""; // FOR TEST
         if (isUp) {
-
 
             if (levelOfMood <= 4 && levelOfMood > 0) {
                 levelOfMood--;
-                // message = "Top to Bottom swipe"; // FOR TEST
-                if (levelOfMood == 4) {
-                    imageViewSmiley.setImageResource(imageList.get(0));       // super happy
-                    imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
-                    playCoolSuperHappySound(imageViewSmiley);
-                } else if (levelOfMood == 3) {
-                    imageViewSmiley.setImageResource(imageList.get(2));       // happy
-                    imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
-                    playCatHappySound(imageViewSmiley);
-                } else if (levelOfMood == 2) {
-                    imageViewSmiley.setImageResource(imageList.get(4));       // normal
-                    imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
-                    playNatureNormalSound(imageViewSmiley);
-                } else if (levelOfMood == 1) {
-                    imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
-                    imageViewBackground.setImageResource(imageList.get(7));   // warm grey
-                    playTrainDisappointedSound(imageViewSmiley);
-                } else if (levelOfMood == 0) {
-                    imageViewSmiley.setImageResource(imageList.get(8));       // sad
-                    imageViewBackground.setImageResource(imageList.get(9));   // faded red
-                    playBrokenGlassSadSound(imageViewSmiley);
-                }
+                manageDisplayAccordingToMoodLevel();
             }
         } else {
-            final Calendar c = Calendar.getInstance();
 
             if (levelOfMood < 4 && levelOfMood >= 0) {
                 levelOfMood++;
-                // message = "Bottom to Top swipe"; // FOR TEST
-                if (levelOfMood == 4) {
-                    imageViewSmiley.setImageResource(imageList.get(0));       // super happy
-                    imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
-                    playCoolSuperHappySound(imageViewSmiley);
-                } else if (levelOfMood == 3) {
-                    imageViewSmiley.setImageResource(imageList.get(2));       // happy
-                    imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
-                    playCatHappySound(imageViewSmiley);
-                } else if (levelOfMood == 2) {
-                    imageViewSmiley.setImageResource(imageList.get(4));       // normal
-                    imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
-                    playNatureNormalSound(imageViewSmiley);
-                } else if (levelOfMood == 1) {
-                    imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
-                    imageViewBackground.setImageResource(imageList.get(7));   // warm grey
-                    playTrainDisappointedSound(imageViewSmiley);
-                } else if (levelOfMood == 0) {
-                    imageViewSmiley.setImageResource(imageList.get(8));       // sad
-                    imageViewBackground.setImageResource(imageList.get(9));   // faded red
-                    playBrokenGlassSadSound(imageViewSmiley);
-                }
+                manageDisplayAccordingToMoodLevel();
             }
         }
     }
-    // Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); // FOR TEST
+
+    private void manageDisplayAccordingToMoodLevel() {
+        if (levelOfMood == 4) {
+            imageViewSmiley.setImageResource(imageList.get(0));       // super happy
+            imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
+            playCoolSuperHappySound(imageViewSmiley);
+        } else if (levelOfMood == 3) {
+            imageViewSmiley.setImageResource(imageList.get(2));       // happy
+            imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
+            playCatHappySound(imageViewSmiley);
+        } else if (levelOfMood == 2) {
+            imageViewSmiley.setImageResource(imageList.get(4));       // normal
+            imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
+            playNatureNormalSound(imageViewSmiley);
+        } else if (levelOfMood == 1) {
+            imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
+            imageViewBackground.setImageResource(imageList.get(7));   // warm grey
+            playTrainDisappointedSound(imageViewSmiley);
+        } else if (levelOfMood == 0) {
+            imageViewSmiley.setImageResource(imageList.get(8));       // sad
+            imageViewBackground.setImageResource(imageList.get(9));   // faded red
+            playBrokenGlassSadSound(imageViewSmiley);
+        }
+    }
+
     // DIFFERENT METHODS OF GESTURE DETECTOR
     @Override
     public boolean onDown(MotionEvent event) {                                              // NOT USE
-        Log.d(DEBUG_TAG, "onDown: " + event.toString());
         return true;
     }
     @Override
     public void onShowPress(MotionEvent event) {                                            // NOT USE
-        Log.d(DEBUG_TAG, "onShowPress: " + event.toString());
     }
     @Override
     public boolean onSingleTapUp(MotionEvent event) {                                       // NOT USE
-        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
         return true;
     }
     @Override
     public boolean onScroll(MotionEvent event1, MotionEvent event2, float vX, float vY) {   // NOT USE
-        Log.d(DEBUG_TAG, "onScroll: " + event1.toString() + event2.toString());
         return true;
     }
     @Override
     public void onLongPress(MotionEvent event) {                                            // NOT USE
-        Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
     // onFling method : Permit the vertical swipe
@@ -268,28 +240,24 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             if (e1.getY() < e2.getY()) {
                 Log.d(DEBUG_TAG, "Up to Down swipe performed");
                 onSwipe(true);
-                System.out.println(levelOfMood + " TEST");
                 if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
-                    System.out.println(mDay + "  TEST !!!");
-                    System.out.println(c.get(Calendar.DAY_OF_MONTH) + " TEST !!!");
                 }
             }
 
             if (e1.getY() > e2.getY()) {
                 Log.d(DEBUG_TAG, "Down to Up swipe performed");
                 onSwipe(false);
-                System.out.println(levelOfMood + " TEST 2");
 
                 if(mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
-                    System.out.println(mDay + "  TEST !!!");
-                    System.out.println(c.get(Calendar.DAY_OF_MONTH) + " TEST !!!");
                 }
             }
         }
         return true;
     }
+
+
 
     // METHODS TO PLAY MOOD SOUNDS
     // Method who play the sound (COOL) corresponding to the super happy mood
