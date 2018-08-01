@@ -19,8 +19,6 @@ public class HistoryActivity extends AppCompatActivity  {
 
     int a = 0; // height of screen
     int b = 0; // width of screen
-    int i = 0;
-
     ArrayList<Integer> listColorBackground = new ArrayList<>(5); // state arrayList who will store the five color
 
     @Override
@@ -31,8 +29,8 @@ public class HistoryActivity extends AppCompatActivity  {
 
         SharedPreferences mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         SharedPreferences mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-        final int mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3);
-        final String mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "Aucun commentaire");
+        final int mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3); // recover moodLevel of the MainActivity
+        final String mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "Aucun commentaire"); // recover comment to the MainActivity
 
         addColorToListColorBackground();
 
@@ -71,7 +69,7 @@ public class HistoryActivity extends AppCompatActivity  {
             }
         });
     }
-
+    // Method to add color to the listColorBackground
     private void addColorToListColorBackground() {
         listColorBackground.add(0, R.color.faded_red);
         listColorBackground.add(1, R.color.warm_grey);

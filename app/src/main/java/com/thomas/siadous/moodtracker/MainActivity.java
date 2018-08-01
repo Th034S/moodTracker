@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 startActivity(historyActivityIntent);
             }
         });
-
        manageDialogBox();
     }
 
@@ -256,8 +255,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         return true;
     }
-
-
 
     // METHODS TO PLAY MOOD SOUNDS
     // Method who play the sound (COOL) corresponding to the super happy mood
