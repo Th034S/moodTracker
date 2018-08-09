@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class HistoryActivity extends AppCompatActivity  {
 
@@ -27,12 +30,17 @@ public class HistoryActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_history);
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);  // Reference layoutHistory
 
-        SharedPreferences mPreferencesMoodLevel = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-        SharedPreferences mPreferencesComment = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-        final int mMoodLevel = mPreferencesMoodLevel.getInt(MainActivity.PREF_KEY_MOOD_LEVEL, 3); // recover moodLevel of the MainActivity
-        final String mComment = mPreferencesComment.getString(MainActivity.PREF_KEY_COMMENT, "Aucun commentaire"); // recover comment to the MainActivity
+        SharedPreferences mPreference = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
+        final int mMoodLevel = mPreference.getInt(MainActivity.PREF_KEY_MOOD_LEVEL,3);
+        final ArrayList<Integer> mMoodLevel1 = new ArrayList<>();
+        mMoodLevel1.add(mMoodLevel);     // to store moodLevel
+        final String mComment = mPreference.getString(MainActivity.PREF_KEY_COMMENT, "Aucun commentaire"); //to store comment
 
         addColorToListColorBackground();
+
+        for(int i=0; i<mMoodLevel1.size(); i++) {
+            System.out.println(mMoodLevel1.get(i));
+        }
 
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -45,8 +53,8 @@ public class HistoryActivity extends AppCompatActivity  {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((mMoodLevel + 1) * 0.2 * b), (int) (0.143 * a));
 
                     cardView.setLayoutParams(params);
-                    TextView mHistoryBlock = new TextView(getApplicationContext()); // Declare textView
 
+                    TextView mHistoryBlock = new TextView(getApplicationContext()); // Declare textView
                     mHistoryBlock.setLayoutParams(params);
 
                     ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
@@ -55,19 +63,20 @@ public class HistoryActivity extends AppCompatActivity  {
 
                     cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel))); // change background of cardView
 
-                        commentImageButton.setOnClickListener(new View.OnClickListener() {
+
+                    commentImageButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Toast msg = Toast.makeText(HistoryActivity.this, mComment, Toast.LENGTH_SHORT);
                                 msg.show();
                             }
                         });
-
                     cardView.addView(mHistoryBlock); // to add mHistoryBlock to the cardView
                     cardView.addView(commentImageButton); // to add commentImageButton to the cardView
                     layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
             }
         });
+
     }
     // Method to add color to the listColorBackground
     private void addColorToListColorBackground() {
@@ -82,7 +91,6 @@ public class HistoryActivity extends AppCompatActivity  {
     protected void init() {
         a = layoutHistory.getHeight(); // to obtain height
         b = layoutHistory.getWidth();  // to obtain width
-      //  Toast.makeText(HistoryActivity.this, " Height " + a + " Width " + b, Toast.LENGTH_LONG).show();
     }
 
 }

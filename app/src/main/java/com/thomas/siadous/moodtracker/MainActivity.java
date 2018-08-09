@@ -1,7 +1,9 @@
 package com.thomas.siadous.moodtracker;
 
 // IMPORTS
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -10,6 +12,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -19,9 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
@@ -33,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private SharedPreferences mPreferences; // Use to store data
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
-    public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key
-    public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL";
+    public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key comment
+    public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL"; // preference key mood level
 
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
@@ -60,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         referenceElementLayout();
 
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
-        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
-        final Calendar c = Calendar.getInstance();
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
+        final Calendar c = Calendar.getInstance(); // Initiate Calendar
+        mDay = c.get(Calendar.DAY_OF_MONTH); // to store the day of the month
 
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
         referenceSound();
@@ -78,13 +83,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 startActivity(historyActivityIntent);
             }
         });
-       manageDialogBox();
+       manageAlertDialog();
+
+
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) { // For the good performance of gestureDetector
         return this.mDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
+
 
     private void addToImageList() {
         //add smiley images and background in an ArrayList
@@ -117,55 +126,71 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageButtonComments = findViewById(R.id.imageButton_comments); // Reference ImageButton to add comments
     }
 
-    private void manageDialogBox() {
-        // dialog box to add comments appears when clicked
+    private void manageAlertDialog(){ // TEST method
+
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {  // réduiure
-                final Dialog dialog = new Dialog(MainActivity.this);
-                dialog.setContentView(R.layout.dialog_box_comments);
-                //References
-                TextView titleComment = dialog.findViewById(R.id.title_dialog); // title of the dialog box
-                final EditText editComment = dialog.findViewById(R.id.edit_dialog); // Input
-                Button cancelCommentBtn = dialog.findViewById(R.id.cancel_button_dialog); // cancel button
-                final Button okDialogBtn = dialog.findViewById(R.id.ok_button_dialog); // ok button
-
-                okDialogBtn.setEnabled(false); // Disable okDialogButton
-                // onClick method for CANCEL Button
-                cancelCommentBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                final EditText editComment;
+                editComment = new EditText(MainActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                editComment.setLayoutParams(lp);
+                alert.setView(editComment);
+                Log.d("DEBUG", "Enters");
+                alert.setTitle("Commentaire");
+                alert.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        dialog.dismiss(); // close dialog box when click in cancelButton
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alert.setCancelable(true);
                     }
                 });
-                // onClick method for OK Button
-                okDialogBtn.setOnClickListener(new View.OnClickListener() {
+                Log.d("DEBUG", "Enters 2");
+                alert.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         final Calendar c = Calendar.getInstance();
                         if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                             mPreferences.edit().putString(PREF_KEY_COMMENT, editComment.getText().toString()).apply(); // Save comment
                         }
-                        dialog.dismiss(); // close dialog box
+                        alert.setCancelable(true); // close dialog box
                     }
                 });
-                dialog.show();
-                // until a character is entered, the button remains disabled
-                editComment.addTextChangedListener(new TextWatcher() {
+                Log.d("DEBUG", "Enters 3");
+
+               // final AlertDialog dialog = alert.create();
+                alert.show();
+                Log.d("DEBUG", "Enters 4");
+
+
+             /*   editComment.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { // NOT USE
                     }
                     @Override
-                    public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                        okDialogBtn.setEnabled(s.toString().length() != 0); // Enable the okButton when the length of comment does not equal to zero
+                    public void onTextChanged(CharSequence s, int i, int i1, int i2) { // NOT USE
+                        // Check if edit text is empty
+                        if (TextUtils.isEmpty(s)) {
+                            // Disable ok button
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            // Something into edit text. Enable the button.
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                        }
                     }
                     @Override
-                    public void afterTextChanged(Editable editable) { // NOT USE
+                    public void afterTextChanged(Editable s) {
+
                     }
-                });
+                }); */
             }
         });
+
     }
+
+
 
     // According to the swipe up or down, background and smiley change
     public void onSwipe(Boolean isUp) {
@@ -242,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
                 }
+
             }
 
             if (e1.getY() > e2.getY()) {
@@ -251,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if(mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
                 }
+
             }
         }
         return true;
