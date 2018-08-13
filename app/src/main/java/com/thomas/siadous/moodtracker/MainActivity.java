@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
     public final static String PREF_KEY_COMMENT = "PREF_KEY_COMMENT"; // Preference key comment
     public final static String PREF_KEY_MOOD_LEVEL = "PREF_KEY_MOOD_LEVEL"; // preference key mood level
+    public final static String PREF_KEY_DAY = "PREF_KEY_DAY"; // preference key day
 
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
@@ -266,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 onSwipe(true);
                 if (mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                    mPreferences.edit().putInt(PREF_KEY_DAY, c.get(Calendar.DAY_OF_MONTH)).apply();
                 }
 
             }
@@ -276,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                 if(mDay == c.get(Calendar.DAY_OF_MONTH)) {
                     mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL, levelOfMood).apply();
+                    mPreferences.edit().putInt(PREF_KEY_DAY, c.get(Calendar.DAY_OF_MONTH)).apply();
                 }
 
             }
