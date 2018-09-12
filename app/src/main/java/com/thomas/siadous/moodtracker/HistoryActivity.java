@@ -15,7 +15,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-
 public class HistoryActivity extends AppCompatActivity  {
 
     private LinearLayout layoutHistory; // state LinearLayout
@@ -24,26 +23,27 @@ public class HistoryActivity extends AppCompatActivity  {
     int b = 0; // width of screen
     ArrayList<Integer> listColorBackground = new ArrayList<>(5); // state arrayList who will store the five color
 
+    private SharedPreferences mPreference;
+    String history;
+    int mMoodLevel;
+    String mComment; //to store comment
+    int mDay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println(" HEY ! HISTORY ACTIVITY : ON CREATE LAUNCHED");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);  // Reference layoutHistory
 
-        SharedPreferences mPreference = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
-         int mMoodLevel = mPreference.getInt(MainActivity.PREF_KEY_MOOD_LEVEL,3);
-         String mComment = mPreference.getString(MainActivity.PREF_KEY_COMMENT, "Aucun commentaire"); //to store comment
-         int mDay = mPreference.getInt(MainActivity.PREF_KEY_DAY, 1);
-
+        Log.d("DEBUG", "On Create works");
+        mPreference = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         addColorToListColorBackground();
 
-        final Calendar c = Calendar.getInstance();
+        history = mPreference.getString(MainActivity.PREF_KEY, "Nothing");
+        System.out.println("Salut salut " + history);
 
-        while(c.get(Calendar.DAY_OF_MONTH) - mDay >= 1) {
-            createCardView(mMoodLevel, mComment);
-            mDay++;
-        }
-        
+
     }
 
     // Method to add color to the listColorBackground
@@ -56,7 +56,7 @@ public class HistoryActivity extends AppCompatActivity  {
     }
 
     //method to create a card view for the moodLevel and comment
-    private void createCardView( final int moodLevel, final String comment) {
+            private void createCardView() {
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -65,7 +65,7 @@ public class HistoryActivity extends AppCompatActivity  {
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 CardView cardView = new CardView(getApplicationContext()); // Declare CardView
 
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((moodLevel + 1) * 0.2 * b), (int) (0.143 * a));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((mMoodLevel + 1) * 0.2 * b), (int) (0.143 * a));
 
                 cardView.setLayoutParams(params);
 
@@ -76,13 +76,13 @@ public class HistoryActivity extends AppCompatActivity  {
                 commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
                 commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
 
-                cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel))); // change background of cardView
+                cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(mMoodLevel))); // change background of cardView
 
 
                 commentImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
+                        Toast msg = Toast.makeText(HistoryActivity.this, mComment, Toast.LENGTH_SHORT);
                         msg.show();
                     }
                 });
@@ -97,6 +97,36 @@ public class HistoryActivity extends AppCompatActivity  {
     protected void init() {
         a = layoutHistory.getHeight(); // to obtain height
         b = layoutHistory.getWidth();  // to obtain width
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        System.out.println("HEY ! MainActivity : ON START LAUNCHED !");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("HEY ! HISTORY ACTIVITY : ON RESUME LAUNCHED !");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("HEY ! HISTORY ACTIVITY : ON PAUSE LAUNCHED !");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("HEY ! HISTORY ACTIVITY : ON STOP LAUNCHED !");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("HEY ! HISTORY ACTIVITY : ON DESTROY LAUNCHED !");
     }
 
 }
