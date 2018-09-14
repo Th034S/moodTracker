@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             lastDay = c.get(Calendar.DAY_OF_MONTH) - 1;
             System.out.println("coucou je fais 1 jour pile poil");
             System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
-            mDataHistory = mDataHistory + " /" + lastDay  + ", " + levelOfMood + ", " + comment;
+            mDataHistory = mDataHistory + "/" + lastDay  + "," + levelOfMood + ", " + comment;
             lastDate = nowDate;
             mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
             comment = "";
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
                 for (int i = 0; i <= dayNumber - 1; i++) {
                     lastDate = lastDate + oneDayInMillis;
-                    mDataHistory = mDataHistory + " /" + lastDay + ", " + defaultMoodLevel + ", ";
+                    mDataHistory = mDataHistory + "/" + lastDay + "," + defaultMoodLevel + ", ";
                     lastDay++;
                 }
                 lastDate = nowDate;
