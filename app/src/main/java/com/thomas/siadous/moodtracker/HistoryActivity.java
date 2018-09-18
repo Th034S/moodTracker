@@ -27,7 +27,6 @@ public class HistoryActivity extends AppCompatActivity  {
     String history;
     int mMoodLevel = 0;
     String mComment = ""; //to store comment
-    int mDay;
     int dayNumber = 0;
 
     @Override
@@ -53,15 +52,10 @@ public class HistoryActivity extends AppCompatActivity  {
 
             System.out.println("JE SUIS ENTRE DANS LA CONDITIONNN !");
         for (int i = 1; i < partNumber; i++) {
-            System.out.println("Je suis DANS LA BOUCLE FOOOOR");
             String part[] = historyPart[i].split(",");
-            System.out.println("Je suis DANS LA BOUCLE FOOOOR");
-            mMoodLevel = Integer.parseInt(part[1]);                   // THE PROBLEM
-            System.out.println("Je suis DANS LA BOUCLE FOOOOR");
+            mMoodLevel = Integer.parseInt(part[1]);
             mComment = part[2];
-            System.out.println("Je suis DANS LA BOUCLE FOOOOR");
             createCardView(mMoodLevel, mComment, dayNumber);
-            System.out.println(mMoodLevel + " = HEY MOOD LEVEL");
             dayNumber--;
           }
         }

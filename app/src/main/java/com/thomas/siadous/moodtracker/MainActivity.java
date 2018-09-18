@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int lastDay; // to store the last day registered
 
     int dayNumber;
+    int dayNumberToDelete = 0;
 
     String mDataHistory = "";
     String str_date2;
@@ -103,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             lastDate = date.getTime();
             System.out.println((nowDate - lastDate) + " NOWDATE - LASTDATE");
         }
-
 
         saveData();
 
@@ -215,26 +215,33 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void manageDisplayAccordingToMoodLevel() {
-        if (levelOfMood == 4) {
-            imageViewSmiley.setImageResource(imageList.get(0));       // super happy
-            imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
-            playCoolSuperHappySound(imageViewSmiley);
-        } else if (levelOfMood == 3) {
-            imageViewSmiley.setImageResource(imageList.get(2));       // happy
-            imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
-            playCatHappySound(imageViewSmiley);
-        } else if (levelOfMood == 2) {
-            imageViewSmiley.setImageResource(imageList.get(4));       // normal
-            imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
-            playNatureNormalSound(imageViewSmiley);
-        } else if (levelOfMood == 1) {
-            imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
-            imageViewBackground.setImageResource(imageList.get(7));   // warm grey
-            playTrainDisappointedSound(imageViewSmiley);
-        } else if (levelOfMood == 0) {
-            imageViewSmiley.setImageResource(imageList.get(8));       // sad
-            imageViewBackground.setImageResource(imageList.get(9));   // faded red
-            playBrokenGlassSadSound(imageViewSmiley);
+        switch (levelOfMood) {
+
+            case 4 :
+                imageViewSmiley.setImageResource(imageList.get(0));       // super happy
+                imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
+                playCoolSuperHappySound(imageViewSmiley);
+                break;
+            case 3 :
+                imageViewSmiley.setImageResource(imageList.get(2));       // happy
+                imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
+                playCatHappySound(imageViewSmiley);
+                break;
+            case 2 :
+                imageViewSmiley.setImageResource(imageList.get(4));       // normal
+                imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
+                playNatureNormalSound(imageViewSmiley);
+                break;
+            case 1 :
+                imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
+                imageViewBackground.setImageResource(imageList.get(7));   // warm grey
+                playTrainDisappointedSound(imageViewSmiley);
+                break;
+            case 0 :
+                imageViewSmiley.setImageResource(imageList.get(8));       // sad
+                imageViewBackground.setImageResource(imageList.get(9));   // faded red
+                playBrokenGlassSadSound(imageViewSmiley);
+                break;
         }
     }
     // permit to register data in preferences
@@ -246,10 +253,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         if ((nowDate - lastDate) >= oneDayInMillis && (nowDate - lastDate) < twoDaysInMillis) {
             lastDay = c.get(Calendar.DAY_OF_MONTH) - 1;
-            System.out.println("coucou je fais 1 jour pile poil");
+            System.out.println("coucou je fais 1 jour ");
             System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
             mDataHistory = mDataHistory + "/" + lastDay  + "," + levelOfMood + ", " + comment;
             lastDate = nowDate;
+            manageEighthDayAndMore(); // CHANTIER TEST
+
             mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
             comment = "";
         } else {
@@ -264,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     lastDay++;
                 }
                 lastDate = nowDate;
+
+                manageEighthDayAndMore(); // CHANTIER TEST
+
                 mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
                 comment = "";
             } else if ((nowDate - lastDate) > sevenDaysInMillis){
@@ -273,6 +285,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 lastDate = nowDate;
                 mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
                 comment = "";
+            }
+        }
+    }
+
+    private void manageEighthDayAndMore() {
+        System.out.println(" !!! La méthode est LANCéE !!!!");
+        System.out.println(".................................................////////////////////////////////////////////////////////////////////////////////////////");
+        String part[] = mDataHistory.split("/");
+        int numberOfDays = part.length - 1;
+        dayNumberToDelete = numberOfDays - 7;
+        if (dayNumberToDelete >= 1) {
+            System.out.println("Je rentre DANS LA CONDITIONNNNNN !!!!!!!!!!");
+            System.out.println("////////////////////////////////////////////////////////////////////////////////////");
+            for (int i = 1; i <= dayNumberToDelete; i++) {
+                System.out.println("Je rentre dans le premier FOOOOORRRRR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("////////////////////////////////////////////////////////////////////////////////////");
+                part[i] = "";
+            }
+            mDataHistory = "";
+            for (int i = dayNumberToDelete + 1; i <= (dayNumberToDelete + 7); i++) {
+                System.out.println("JE RENTRE DANS LE DEUXIEME FOOOOOOOOOOOOOOOORRRRRRRRRR !!!!!!!!!!!!!!");
+                System.out.println("////////////////////////////////////////////////////////////////////////////////////");
+                mDataHistory = mDataHistory + "/" + part[i];
             }
         }
     }
