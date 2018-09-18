@@ -28,6 +28,7 @@ public class HistoryActivity extends AppCompatActivity  {
     int mMoodLevel = 0;
     String mComment = ""; //to store comment
     int mDay;
+    int dayNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class HistoryActivity extends AppCompatActivity  {
         System.out.println(historyPart[1]);
         int partNumber = historyPart.length;
         System.out.println(historyPart.length + "   part NUMBER");
+        dayNumber = partNumber - 1;
 
             System.out.println("JE SUIS ENTRE DANS LA CONDITIONNN !");
         for (int i = 1; i < partNumber; i++) {
@@ -58,8 +60,9 @@ public class HistoryActivity extends AppCompatActivity  {
             System.out.println("Je suis DANS LA BOUCLE FOOOOR");
             mComment = part[2];
             System.out.println("Je suis DANS LA BOUCLE FOOOOR");
-            createCardView(mMoodLevel, mComment);
+            createCardView(mMoodLevel, mComment, dayNumber);
             System.out.println(mMoodLevel + " = HEY MOOD LEVEL");
+            dayNumber--;
           }
         }
 
@@ -75,7 +78,7 @@ public class HistoryActivity extends AppCompatActivity  {
     }
 
     //method to create a card view for the moodLevel and comment
-            private void createCardView(final int moodLevel, String comment) {
+            private void createCardView(final int moodLevel, final String comment, final int dayNumber) {
         System.out.println("JE CREE UNE CARTE !!");
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -90,8 +93,19 @@ public class HistoryActivity extends AppCompatActivity  {
                 cardView.setLayoutParams(params);
                 System.out.println("JE CREE UNE CARTE !!");
 
-                TextView mHistoryBlock = new TextView(getApplicationContext()); // Declare textView
-                mHistoryBlock.setLayoutParams(params);
+                TextView text = new TextView(getApplicationContext()); // Declare textView
+                text.setLayoutParams(params);
+                if (dayNumber > 2 && dayNumber < 8) {
+                    text.setText("Il y a " + dayNumber + " jours");
+                }
+                else {
+                    if (dayNumber == 2) {
+                        text.setText("Avant-hier");
+                    }
+                    else if (dayNumber == 1) {
+                        text.setText("Hier");
+                    }
+                }
 
                 ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
                 commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
@@ -102,12 +116,14 @@ public class HistoryActivity extends AppCompatActivity  {
                 commentImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast msg = Toast.makeText(HistoryActivity.this, mComment, Toast.LENGTH_SHORT);
+                        Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
                         msg.show();
                     }
                 });
-                cardView.addView(mHistoryBlock); // to add mHistoryBlock to the cardView
-                cardView.addView(commentImageButton); // to add commentImageButton to the cardView
+                cardView.addView(text); // to add mHistoryBlock to the cardView
+                if (!(comment.equals(" "))) {
+                    cardView.addView(commentImageButton); // to add commentImageButton to the cardView
+                }
                 layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
             }
         });

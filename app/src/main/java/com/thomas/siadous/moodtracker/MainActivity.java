@@ -265,12 +265,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
                 lastDate = nowDate;
                 mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
+                comment = "";
             } else if ((nowDate - lastDate) > sevenDaysInMillis){
                 mDataHistory = "";
                 System.out.println("Coucou je fais plus de 7 jours");
                 System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
                 lastDate = nowDate;
                 mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
+                comment = "";
             }
         }
     }
