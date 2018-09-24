@@ -13,4 +13,5 @@
 
     <color name="grey_background_history">#bdbdbd</color>
     <color name="transparent">#00000000</color>
+    <color name="black_background_cardView_text">#2d3436</color>
 </resources>

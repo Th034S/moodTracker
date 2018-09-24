@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class HistoryActivity extends AppCompatActivity  {
 
@@ -24,10 +23,10 @@ public class HistoryActivity extends AppCompatActivity  {
     ArrayList<Integer> listColorBackground = new ArrayList<>(5); // state arrayList who will store the five color
 
     private SharedPreferences mPreference;
-    String history;
-    int mMoodLevel = 0;
+    String history; // to recover data in preferences
+    int mMoodLevel = 0; // initialize moodLevel to 0
     String mComment = ""; //to store comment
-    int dayNumber = 0;
+    int dayNumber = 0; // day number in history
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class HistoryActivity extends AppCompatActivity  {
         addColorToListColorBackground();
 
         history = mPreference.getString(MainActivity.PREF_KEY, "Nothing");
-        System.out.println("Salut salut " + history);
+        System.out.println(history + "///////////////////////////////////////////////////////////////////////////////////////////////////// ");
 
         if (!(history.equals("Nothing"))) {
         String historyPart[] = history.split("/");
@@ -50,7 +49,6 @@ public class HistoryActivity extends AppCompatActivity  {
         System.out.println(historyPart.length + "   part NUMBER");
         dayNumber = partNumber - 1;
 
-            System.out.println("JE SUIS ENTRE DANS LA CONDITIONNN !");
         for (int i = 1; i < partNumber; i++) {
             String part[] = historyPart[i].split(",");
             mMoodLevel = Integer.parseInt(part[1]);
@@ -59,7 +57,6 @@ public class HistoryActivity extends AppCompatActivity  {
             dayNumber--;
           }
         }
-
     }
 
     // Method to add color to the listColorBackground
@@ -72,7 +69,7 @@ public class HistoryActivity extends AppCompatActivity  {
     }
 
     //method to create a card view for the moodLevel and comment
-            private void createCardView(final int moodLevel, final String comment, final int dayNumber) {
+        private void createCardView(final int moodLevel, final String comment, final int dayNumber) {
         System.out.println("JE CREE UNE CARTE !!");
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -100,6 +97,7 @@ public class HistoryActivity extends AppCompatActivity  {
                         text.setText("Hier");
                     }
                 }
+                text.setTextColor(getResources().getColor(R.color.black_background_cardView_text));
 
                 ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
                 commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton

@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
@@ -43,11 +42,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     final int defaultMoodLevel = 3; // moodLevel by default
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
-    final long oneDayInMillis = 86_400_000L;
-    final long twoDaysInMillis = 172_800_000L;
-    final long sevenDaysInMillis = 604_800_000L;
-    long lastDate;
-    long nowDate;
+    final long oneDayInMillis = 86_400_000L; // constant one day in milliseconds
+    final long twoDaysInMillis = 172_800_000L; // constant two days in milliseconds
+    final long sevenDaysInMillis = 604_800_000L; // constant seven days in milliseconds
+    long lastDate; // last date in milliseconds
+    long nowDate; // now date in milliseconds
 
     private GestureDetectorCompat mDetector; // For swipe
     int mCoolSuperHappySoundID; // Sound id for super happy mood
@@ -65,11 +64,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int nowYear; // to store the year now
     int lastDay; // to store the last day registered
 
-    int dayNumber;
-    int dayNumberToDelete = 0;
+    int dayNumber; // day number
+    int dayNumberToDelete = 0; // day number to delete of dataHistory
 
-    String mDataHistory = "";
-    String str_date2;
+    String mDataHistory = ""; // to store days with mood, day, com
+    String dateFormat; // to store the day, the month, and the year
     String comment = ""; // To store comment
 
     // THE METHOD onCreate
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setContentView(R.layout.activity_main);
         referenceElementLayout();
 
-        System.out.println("HEY ! MainActivity : ON CREATE LAUNCHED !");
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
 
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
@@ -88,28 +86,25 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         nowMonth = c.get(Calendar.MONTH) + 1;
         nowYear = c.get(Calendar.YEAR);
 
-
         if (lastDate == 0) {
             lastDay = nowDay;
             final Calendar c6 = Calendar.getInstance(); // Initialize Calendar
             nowDate = c6.getTimeInMillis();
-            str_date2 = lastDay + "-" + nowMonth + "-" + nowYear;
+            dateFormat = lastDay + "-" + nowMonth + "-" + nowYear;
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             Date date = null;
             try {
-                date = formatter.parse(str_date2);
+                date = formatter.parse(dateFormat);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             lastDate = date.getTime();
             System.out.println((nowDate - lastDate) + " NOWDATE - LASTDATE");
         }
-
         saveData();
 
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
         referenceSound();
-
         addToImageList();
 
         // Launch a new activity (HistoryActivity) when click on imageButtonHistory
@@ -159,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         imageButtonHistory = findViewById(R.id.imageButton_history); // Reference ImageButton for access to history
         imageButtonComments = findViewById(R.id.imageButton_comments); // Reference ImageButton to add comments
     }
-
-    private void manageAlertDialog() { // TEST method
+    // permit to manage the dialog box
+    private void manageAlertDialog() {
         imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
             mDataHistory = mDataHistory + "/" + lastDay  + "," + levelOfMood + ", " + comment;
             lastDate = nowDate;
-            manageEighthDayAndMore(); // CHANTIER TEST
+            manageEighthDayAndMore();
 
             mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
             comment = "";
@@ -274,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
                 lastDate = nowDate;
 
-                manageEighthDayAndMore(); // CHANTIER TEST
+                manageEighthDayAndMore();
 
                 mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
                 comment = "";
@@ -290,23 +285,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void manageEighthDayAndMore() {
-        System.out.println(" !!! La méthode est LANCéE !!!!");
-        System.out.println(".................................................////////////////////////////////////////////////////////////////////////////////////////");
         String part[] = mDataHistory.split("/");
         int numberOfDays = part.length - 1;
         dayNumberToDelete = numberOfDays - 7;
         if (dayNumberToDelete >= 1) {
-            System.out.println("Je rentre DANS LA CONDITIONNNNNN !!!!!!!!!!");
-            System.out.println("////////////////////////////////////////////////////////////////////////////////////");
             for (int i = 1; i <= dayNumberToDelete; i++) {
-                System.out.println("Je rentre dans le premier FOOOOORRRRR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                System.out.println("////////////////////////////////////////////////////////////////////////////////////");
                 part[i] = "";
             }
             mDataHistory = "";
             for (int i = dayNumberToDelete + 1; i <= (dayNumberToDelete + 7); i++) {
-                System.out.println("JE RENTRE DANS LE DEUXIEME FOOOOOOOOOOOOOOOORRRRRRRRRR !!!!!!!!!!!!!!");
-                System.out.println("////////////////////////////////////////////////////////////////////////////////////");
                 mDataHistory = mDataHistory + "/" + part[i];
             }
         }
@@ -347,11 +334,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             if (e1.getY() < e2.getY()) {
                 Log.d(DEBUG_TAG, "Up to Down swipe performed");
                 onSwipe(true);
+                comment = "";
             }
 
             if (e1.getY() > e2.getY()) {
                 Log.d(DEBUG_TAG, "Down to Up swipe performed");
                 onSwipe(false);
+                comment = "";
             }
         }
             return true;
@@ -410,12 +399,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         protected void onStop() {
             super.onStop();
             System.out.println("HEY ! MainActivity : ON STOP LAUNCHED !");
+            saveData();
         }
 
         @Override
         protected void onDestroy() {
             super.onDestroy();
             System.out.println("HEY ! MainActivity : ON DESTROY LAUNCHED !");
+            saveData();
         }
     }
 
