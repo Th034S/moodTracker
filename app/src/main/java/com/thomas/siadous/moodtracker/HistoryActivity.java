@@ -68,9 +68,8 @@ public class HistoryActivity extends AppCompatActivity  {
         listColorBackground.add(4, R.color.banana_yellow);
     }
 
-    //method to create a card view for the moodLevel and comment
+        //method to create a card view for the moodLevel and comment
         private void createCardView(final int moodLevel, final String comment, final int dayNumber) {
-        System.out.println("JE CREE UNE CARTE !!");
         ViewTreeObserver observer = layoutHistory.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -101,21 +100,40 @@ public class HistoryActivity extends AppCompatActivity  {
 
                 ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
                 commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
+                switch (moodLevel) {
+                    case 0 :
+                        commentImageButton.setX((float) ((b * 0.2) - (b * 0.210)));
+                        break;
+                    case 1 :
+                        commentImageButton.setX((float) ((b * 0.4) - (b * 0.310)));
+                        break;
+                    case 2 :
+                        commentImageButton.setX((float) ((b * 0.6) - (b * 0.420)));
+                        break;
+                    case 3 :
+                        commentImageButton.setX((float) ((b * 0.8) - (b * 0.520)));
+                        break;
+                    case 4 :
+                        commentImageButton.setX((float) (b - (b* 0.625)));
+                        break;
+                }
+
                 commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
 
                 cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel))); // change background of cardView
 
-                commentImageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
-                        msg.show();
-                    }
-                });
-                cardView.addView(text); // to add mHistoryBlock to the cardView
                 if (!(comment.equals(" "))) {
                     cardView.addView(commentImageButton); // to add commentImageButton to the cardView
                 }
+
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
+                    msg.show();
+                }
+           });
+                cardView.addView(text); // to add mHistoryBlock to the cardView
                 layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
             }
         });
@@ -125,6 +143,7 @@ public class HistoryActivity extends AppCompatActivity  {
     protected void init() {
         a = layoutHistory.getHeight(); // to obtain height
         b = layoutHistory.getWidth();  // to obtain width
+        System.out.println("BBBBBBBBB" + b);
     }
 
     @Override
