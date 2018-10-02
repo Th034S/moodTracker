@@ -40,22 +40,10 @@ public class HistoryActivity extends AppCompatActivity  {
         addColorToListColorBackground();
 
         history = mPreference.getString(MainActivity.PREF_KEY, "Nothing");
-        System.out.println(history + "///////////////////////////////////////////////////////////////////////////////////////////////////// ");
+        System.out.println(history + "//////////////////////////////////////////////////////////////////// ");
 
         if (!(history.equals("Nothing"))) {
-        String historyPart[] = history.split("/");
-        System.out.println(historyPart[1]);
-        int partNumber = historyPart.length;
-        System.out.println(historyPart.length + "   part NUMBER");
-        dayNumber = partNumber - 1;
-
-        for (int i = 1; i < partNumber; i++) {
-            String part[] = historyPart[i].split(",");
-            mMoodLevel = Integer.parseInt(part[1]);
-            mComment = part[2];
-            createCardView(mMoodLevel, mComment, dayNumber);
-            dayNumber--;
-          }
+            callCreateCardViewAccordingDaysNumber();
         }
     }
 
@@ -66,6 +54,20 @@ public class HistoryActivity extends AppCompatActivity  {
         listColorBackground.add(2, R.color.cornflower_blue_65);
         listColorBackground.add(3, R.color.light_sage);
         listColorBackground.add(4, R.color.banana_yellow);
+    }
+
+    private void callCreateCardViewAccordingDaysNumber() {
+        String daysData[] = history.split("/");
+        int partNumber = daysData.length;
+        dayNumber = partNumber - 1;
+
+        for (int i = 1; i < partNumber; i++) {
+            String threeDataOfOneDay[] = daysData[i].split(",");
+            mMoodLevel = Integer.parseInt(threeDataOfOneDay[1]); // recover moodLevel
+            mComment = threeDataOfOneDay[2]; // recover comment
+            createCardView(mMoodLevel, mComment, dayNumber);
+            dayNumber--;
+        }
     }
 
         //method to create a card view for the moodLevel and comment
@@ -79,64 +81,77 @@ public class HistoryActivity extends AppCompatActivity  {
                 CardView cardView = new CardView(getApplicationContext()); // Declare CardView
                 System.out.println(mMoodLevel + " MOOD LEVEL IN CARDVIEW METHOD");
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((moodLevel + 1) * 0.2 * b), (int) (0.143 * a));
-
                 cardView.setLayoutParams(params);
                 System.out.println("JE CREE UNE CARTE !!");
-
                 TextView text = new TextView(getApplicationContext()); // Declare textView
-                text.setLayoutParams(params);
-                if (dayNumber > 2 && dayNumber < 8) {
-                    text.setText("Il y a " + dayNumber + " jours");
-                }
-                else {
-                    if (dayNumber == 2) {
-                        text.setText("Avant-hier");
-                    }
-                    else if (dayNumber == 1) {
-                        text.setText("Hier");
-                    }
-                }
-                text.setTextColor(getResources().getColor(R.color.black_background_cardView_text));
+                displayDaysAgo(params, text, dayNumber);
 
-                ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
-                commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
-                switch (moodLevel) {
-                    case 0 :
-                        commentImageButton.setX((float) ((b * 0.2) - (b * 0.210)));
-                        break;
-                    case 1 :
-                        commentImageButton.setX((float) ((b * 0.4) - (b * 0.310)));
-                        break;
-                    case 2 :
-                        commentImageButton.setX((float) ((b * 0.6) - (b * 0.420)));
-                        break;
-                    case 3 :
-                        commentImageButton.setX((float) ((b * 0.8) - (b * 0.520)));
-                        break;
-                    case 4 :
-                        commentImageButton.setX((float) (b - (b* 0.625)));
-                        break;
-                }
-
-                commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
+                manageComment(moodLevel, comment, cardView);
 
                 cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel))); // change background of cardView
 
-                if (!(comment.equals(" "))) {
-                    cardView.addView(commentImageButton); // to add commentImageButton to the cardView
-                }
-
-                cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                    Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
-                    msg.show();
-                }
-           });
                 cardView.addView(text); // to add mHistoryBlock to the cardView
                 layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
             }
         });
+    }
+
+    private void manageComment(int moodLevel, String comment, CardView cardView) {
+        ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
+        commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
+        commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
+        positionImageOfMessageOnRight(moodLevel, commentImageButton);
+        displayCommentOnToast(comment, cardView, commentImageButton);
+    }
+
+    private void displayCommentOnToast(final String comment, CardView cardView, ImageButton commentImageButton) {
+        if (!(comment.equals(" "))) {
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
+                    msg.show();
+                }
+            });
+            cardView.addView(commentImageButton); // to add commentImageButton to the cardView
+        }
+    }
+
+    private void displayDaysAgo(LinearLayout.LayoutParams params, TextView text, int dayNumber) {
+        text.setLayoutParams(params);
+        System.out.println("HEYYYY HEY !");
+        if (dayNumber > 2 && dayNumber < 8) {
+            text.setText("Il y a " + dayNumber + " jours");
+        }
+        else {
+            if (dayNumber == 2) {
+                text.setText("Avant-hier");
+            }
+            else if (dayNumber == 1) {
+                text.setText("Hier");
+            }
+        }
+        text.setTextColor(getResources().getColor(R.color.black_background_cardView_text));
+    }
+
+    private void positionImageOfMessageOnRight(int moodLevel, ImageButton commentImageButton) {
+        switch (moodLevel) {
+            case 0 :
+                commentImageButton.setX((float) ((b * 0.2) - (b * 0.210)));
+                break;
+            case 1 :
+                commentImageButton.setX((float) ((b * 0.4) - (b * 0.310)));
+                break;
+            case 2 :
+                commentImageButton.setX((float) ((b * 0.6) - (b * 0.420)));
+                break;
+            case 3 :
+                commentImageButton.setX((float) ((b * 0.8) - (b * 0.520)));
+                break;
+            case 4 :
+                commentImageButton.setX((float) (b - (b* 0.625)));
+                break;
+        }
     }
 
     // method init to obtain the width and the height of the layout

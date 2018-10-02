@@ -83,25 +83,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
 
-        System.out.println(mPreferences.getInt(PREF_KEY_MOOD_LEVEL_BIS, -42) + " ????????????????????????????");
-        moodLevelBis = mPreferences.getInt(PREF_KEY_MOOD_LEVEL_BIS, -1);
-        commentBis = mPreferences.getString(PREF_KEY_COMMENT_BIS, " ");
-        System.out.println(moodLevelBis + " IS IT EMPTY ????");
-
-        if (moodLevelBis != -1) {
-            levelOfMood = moodLevelBis;
-            comment = commentBis;
-            System.out.println(mPreferences.getAll() + " fkrjiejgierigjeroigjeruijjiugjregrg");
-            mPreferences.edit().clear().apply();
-            System.out.println(mPreferences.getAll() + " ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
-        }
-
-        System.out.println(moodLevelBis + " IS IT -1 CAUSE I CLEARED ???");
         addAValueToLastDateForTheFirstLaunch();
         checkDifferenceOfDays();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
         referenceSound();
         addToImageList();
+        moodLevelBis = mPreferences.getInt(PREF_KEY_MOOD_LEVEL_BIS, -1);
+        commentBis = mPreferences.getString(PREF_KEY_COMMENT_BIS, " ");
+
+        if (moodLevelBis != -1) {
+            levelOfMood = moodLevelBis;
+            comment = commentBis;
+            generateDisplayAccordingToMoodLevel(); // THIS IS THE PROBLEM ???
+        }
         launchHistory();
         manageAlertDialog();
     }
@@ -231,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void generateDisplayAccordingToMoodLevel() {
+        System.out.println("JE GENERE LES DIFFERENTES IMAGES !!!");
         switch (levelOfMood) {
             case 4:
                 imageViewSmiley.setImageResource(imageList.get(0));       // super happy
@@ -257,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 imageViewBackground.setImageResource(imageList.get(9));   // faded red
                 playBrokenGlassSadSound(imageViewSmiley);
                 break;
+
         }
     }
 
@@ -266,18 +262,21 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         nowDate = c.getTimeInMillis();                   // TEST
         long differenceDaysInMillis = nowDate - lastDate;
         if (differenceDaysInMillis < oneDayInMillis) {
-            System.out.println("Coucou je fais moins d'1 jour %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            System.out.println("Coucou je fais moins d'1 jour %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         }
         if ((differenceDaysInMillis) >= oneDayInMillis && (differenceDaysInMillis) < twoDaysInMillis) {
+            System.out.println("coucou je fais 1 jour ????????????????????????????????????????????????????????????????");
             saveDataForOneDay();
             levelOfMood = 3; // After save, reset the default screen
             generateDisplayAccordingToMoodLevel(); // generate the display
         } else {
             if ((differenceDaysInMillis) > oneDayInMillis && (differenceDaysInMillis) <= sevenDaysInMillis) {
+                System.out.println("coucou je fais plus de 1 jour et moins de 7 jours !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 saveDataForMoreOneDayAndLessSevenDays();
                 levelOfMood = 3; // After save, reset the default screen
                 generateDisplayAccordingToMoodLevel(); // generate the display
             } else if ((differenceDaysInMillis) > sevenDaysInMillis) {
+                System.out.println("Coucou je fais plus de 7 jours /////////////////////////////////////////////////////");
                 resetAndSaveData();
                 levelOfMood = 3; // After save, reset the default screen
                 generateDisplayAccordingToMoodLevel(); // generate the display
@@ -288,21 +287,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void saveDataForOneDay() {
         final Calendar c = Calendar.getInstance();
         lastDay = c.get(Calendar.DAY_OF_MONTH) - 1;
-        System.out.println("coucou je fais 1 jour ??????????????????????????????????????????????????????????????????????????????????????????????????????????");
         // System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
         mDataHistory = mDataHistory + "/" + lastDay + "," + levelOfMood + ", " + comment;
         lastDate = nowDate;
         manageEighthDayAndMore();
-
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
-        comment = "";
+        comment = ""; // reset comment after each save
     }
 
     private void saveDataForMoreOneDayAndLessSevenDays() {
         final Calendar c = Calendar.getInstance();
         dayNumber = (int) ((nowDate - lastDate) / oneDayInMillis);
         lastDay = (c.get(Calendar.DAY_OF_MONTH) - dayNumber);
-        System.out.println("coucou je fais plus de 1 jour et moins de 7 jours !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         //System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
         for (int i = 0; i <= dayNumber - 1; i++) {
             lastDate = lastDate + oneDayInMillis;
@@ -312,12 +308,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         lastDate = nowDate;
         manageEighthDayAndMore();
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
-        comment = "";
+        comment = ""; // reset comment after each save
     }
 
     private void resetAndSaveData() {
         mDataHistory = "";
-        System.out.println("Coucou je fais plus de 7 jours /////////////////////////////////////////////////////////////////////////////////////////////");
+        System.out.println(" TOUT RESEEEEEEETTTTTTT !!");
         //System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
         lastDate = nowDate;
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
@@ -327,16 +323,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void manageEighthDayAndMore() {
         String part[] = mDataHistory.split("/");
         int numberOfDays = part.length - 1;
-        System.out.print(mDataHistory + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         dayNumberToDelete = numberOfDays - 7;
         if (dayNumberToDelete >= 1) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             for (int i = 1; i <= dayNumberToDelete; i++) {
                 part[i] = "";
             }
             mDataHistory = "";
+            System.out.println("   §§§§§§§§§§§§§§§§§§§§§ TOUT RESET");
             for (int i = dayNumberToDelete + 1; i <= (dayNumberToDelete + 7); i++) {
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 mDataHistory = mDataHistory + "/" + part[i];
             }
         }
@@ -371,19 +365,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         float deltaX = e2.getX() - e1.getX();
         float deltaY = e2.getY() - e1.getY();
-
         if (Math.abs(deltaY) > Math.abs(deltaX)) { // Y travels more than X
-
             if (e1.getY() < e2.getY()) {
                 Log.d(DEBUG_TAG, "Up to Down swipe performed");
                 onSwipe(true);
-                comment = "";
+                mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL_BIS, levelOfMood).apply();
+                mPreferences.edit().putString(PREF_KEY_COMMENT_BIS, comment).apply();
+                comment = ""; // reset comment to each swipe
             }
-
             if (e1.getY() > e2.getY()) {
                 Log.d(DEBUG_TAG, "Down to Up swipe performed");
                 onSwipe(false);
-                comment = "";
+                mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL_BIS, levelOfMood).apply();
+                mPreferences.edit().putString(PREF_KEY_COMMENT_BIS, comment).apply();
+                comment = ""; // reset comment to each swipe
             }
         }
         return true;
@@ -417,6 +412,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     // Method who play the sound (BROKEN GLASS) corresponding to the sad mood
     public void playBrokenGlassSadSound(View view) {
         Log.d("DEBUG", "Sad sound played");
+        System.out.println("sad sound played   !!!!!!");
         mSoundPool.play(mBrokenGlassSadSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
@@ -437,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onPause() {
         super.onPause();
         System.out.println("HEY ! mainActivity : ON PAUSE LAUNCHED !");
-        checkDifferenceOfDays();
     }
 
     @Override
@@ -451,10 +446,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         super.onDestroy();
         System.out.println("HEY ! MainActivity : ON DESTROY LAUNCHED !");
         System.out.println("MESSAGE FROM ON DESTROY METHOD : level of mood " + levelOfMood );
-        mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE);
-        mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL_BIS, levelOfMood).apply();
-        mPreferences.edit().putString(PREF_KEY_COMMENT_BIS, comment).apply();
-        checkDifferenceOfDays();
     }
 }
 
