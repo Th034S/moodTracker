@@ -85,11 +85,8 @@ public class HistoryActivity extends AppCompatActivity  {
                 System.out.println("JE CREE UNE CARTE !!");
                 TextView text = new TextView(getApplicationContext()); // Declare textView
                 displayDaysAgo(params, text, dayNumber);
-
                 manageComment(moodLevel, comment, cardView);
-
                 cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel))); // change background of cardView
-
                 cardView.addView(text); // to add mHistoryBlock to the cardView
                 layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
             }
@@ -149,7 +146,7 @@ public class HistoryActivity extends AppCompatActivity  {
                 commentImageButton.setX((float) ((b * 0.8) - (b * 0.520)));
                 break;
             case 4 :
-                commentImageButton.setX((float) (b - (b* 0.625)));
+                commentImageButton.setX((float) (b - (b * 0.625)));
                 break;
         }
     }
@@ -158,7 +155,6 @@ public class HistoryActivity extends AppCompatActivity  {
     protected void init() {
         a = layoutHistory.getHeight(); // to obtain height
         b = layoutHistory.getWidth();  // to obtain width
-        System.out.println("BBBBBBBBB" + b);
     }
 
     @Override
