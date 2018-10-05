@@ -30,17 +30,13 @@ public class HistoryActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println(" HEY ! HISTORY ACTIVITY : ON CREATE LAUNCHED");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);  // Reference layoutHistory
 
-        Log.d("DEBUG", "On Create works");
         mPreference = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
         addColorToListColorBackground();
-
         history = mPreference.getString(MainActivity.PREF_KEY, "Nothing");
-        System.out.println(history + "//////////////////////////////////////////////////////////////////// ");
 
         if (!(history.equals("Nothing"))) {
             callCreateCardViewAccordingDaysNumber();
@@ -78,32 +74,40 @@ public class HistoryActivity extends AppCompatActivity  {
             public void onGlobalLayout() {
                 init(); // call method init to calculate the size of the screen
                 layoutHistory.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                CardView cardView = new CardView(getApplicationContext()); // Declare CardView
-                System.out.println(mMoodLevel + " MOOD LEVEL IN CARDVIEW METHOD");
+                CardView cardView = new CardView(getApplicationContext()); // Initialize CardView
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) ((moodLevel + 1) * 0.2 * b), (int) (0.143 * a));
                 cardView.setLayoutParams(params);
-                System.out.println("JE CREE UNE CARTE !!");
-                TextView text = new TextView(getApplicationContext()); // Declare textView
+
+                TextView text = new TextView(getApplicationContext()); // Initialize textView
                 displayDaysAgo(params, text, dayNumber);
+
                 manageComment(moodLevel, comment, cardView);
-                cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel))); // change background of cardView
+
+                // change background of cardView
+                cardView.setCardBackgroundColor(getResources().getColor(listColorBackground.get(moodLevel)));
                 cardView.addView(text); // to add mHistoryBlock to the cardView
+
+
                 layoutHistory.addView(cardView); // to add cardView to the view (layoutHistory)
-            }
-        });
-    }
+             }
+          });
+        }
 
     private void manageComment(int moodLevel, String comment, CardView cardView) {
-        ImageButton commentImageButton = new ImageButton(getApplicationContext()); // Declare imageButton
-        commentImageButton.setImageResource(R.drawable.ic_comment_black_48px); // Change image of commentImageButton
-        commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent)); // Change background of commentImageButton to transparent
+        // Initialize imageButton
+        ImageButton commentImageButton = new ImageButton(getApplicationContext());
+        // Change image of commentImageButton
+        commentImageButton.setImageResource(R.drawable.ic_comment_black_48px);
+        // Change background of commentImageButton to transparent
+        commentImageButton.setBackgroundColor(getResources().getColor(R.color.transparent));
         positionImageOfMessageOnRight(moodLevel, commentImageButton);
         displayCommentOnToast(comment, cardView, commentImageButton);
     }
 
     private void displayCommentOnToast(final String comment, CardView cardView, ImageButton commentImageButton) {
         if (!(comment.equals(" "))) {
-            cardView.setOnClickListener(new View.OnClickListener() {
+            commentImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast msg = Toast.makeText(HistoryActivity.this, comment, Toast.LENGTH_SHORT);
@@ -116,7 +120,6 @@ public class HistoryActivity extends AppCompatActivity  {
 
     private void displayDaysAgo(LinearLayout.LayoutParams params, TextView text, int dayNumber) {
         text.setLayoutParams(params);
-        System.out.println("HEYYYY HEY !");
         if (dayNumber > 2 && dayNumber < 8) {
             text.setText("Il y a " + dayNumber + " jours");
         }

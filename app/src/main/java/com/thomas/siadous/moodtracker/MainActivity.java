@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     int lastDay; // to store the last day registered
     int dayNumber; // day number
     int dayNumberToDelete = 0; // day number to delete of dataHistory
-    String mDataHistory; // to store days with mood, day, com
+    String mDataHistory = "null"; // to store days with mood, day, com
     String dateFormat; // to store the day, the month, and the year
     String comment = ""; // To store comment
 
@@ -70,11 +70,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("DATA HISTORY IN ON CREATE " + mDataHistory);
         referenceElementLayout();
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
+
         mPreferences = getSharedPreferences(PREFERENCE_FILE, MODE_PRIVATE); // Initiate the SharedPreferences
+
+        if (mDataHistory.equals("null")) {    // After onDestroy, mDataHistory is null
+            mDataHistory = mPreferences.getString(PREF_KEY, "null");
+        }
+
         addAValueToLastDateForTheFirstLaunch();
-        checkDifferenceOfDays();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
         referenceSound();
         addToImageList();
@@ -83,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (moodLevelBis != -1) {
             levelOfMood = moodLevelBis;
             comment = commentBis;
-            generateDisplayAccordingToMoodLevel(); // THIS IS THE PROBLEM ???
+            generateDisplayAccordingToMoodLevel();
         }
         launchHistory();
         manageAlertDialog();
@@ -208,32 +214,33 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void generateDisplayAccordingToMoodLevel() {
         switch (levelOfMood) {
             case 4:
-                imageViewSmiley.setImageResource(imageList.get(0));       // super happy
-                imageViewBackground.setImageResource(imageList.get(1));   // banana yellow
+                imageViewSmiley.setImageResource(imageList.get(0));     // super happy
+                imageViewBackground.setImageResource(imageList.get(1)); // banana yellow
                 playCoolSuperHappySound(imageViewSmiley);
                 break;
             case 3:
-                imageViewSmiley.setImageResource(imageList.get(2));       // happy
-                imageViewBackground.setImageResource(imageList.get(3));   // light sage (green)
+                imageViewSmiley.setImageResource(imageList.get(2));     // happy
+                imageViewBackground.setImageResource(imageList.get(3)); // light sage (green)
                 playCatHappySound(imageViewSmiley);
                 break;
             case 2:
-                imageViewSmiley.setImageResource(imageList.get(4));       // normal
-                imageViewBackground.setImageResource(imageList.get(5));   // cornflower blue 65
+                imageViewSmiley.setImageResource(imageList.get(4));     // normal
+                imageViewBackground.setImageResource(imageList.get(5)); // cornflower blue 65
                 playNatureNormalSound(imageViewSmiley);
                 break;
             case 1:
-                imageViewSmiley.setImageResource(imageList.get(6));       // disappointed
-                imageViewBackground.setImageResource(imageList.get(7));   // warm grey
+                imageViewSmiley.setImageResource(imageList.get(6));     // disappointed
+                imageViewBackground.setImageResource(imageList.get(7)); // warm grey
                 playTrainDisappointedSound(imageViewSmiley);
                 break;
             case 0:
-                imageViewSmiley.setImageResource(imageList.get(8));       // sad
-                imageViewBackground.setImageResource(imageList.get(9));   // faded red
+                imageViewSmiley.setImageResource(imageList.get(8));     // sad
+                imageViewBackground.setImageResource(imageList.get(9)); // faded red
                 playBrokenGlassSadSound(imageViewSmiley);
                 break;
         }
     }
+
 
     // permit to register data in preferences
     private void checkDifferenceOfDays() {
@@ -244,19 +251,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             System.out.println("Coucou je fais moins d'1 jour ");
         }
         if ((differenceDaysInMillis) >= oneDayInMillis && (differenceDaysInMillis) < twoDaysInMillis) {
-            System.out.println("coucou je fais 1 jour ");
             saveDataForOneDay();
             levelOfMood = 3; // After save, reset the default screen
             generateDisplayAccordingToMoodLevel(); // generate the display
         } else {
             if ((differenceDaysInMillis) > oneDayInMillis && (differenceDaysInMillis) <= sevenDaysInMillis) {
-                System.out.println("coucou je fais plus de 1 jour et moins de 7 jours");
                 saveDataForMoreOneDayAndLessSevenDays();
                 levelOfMood = 3; // After save, reset the default screen
                 generateDisplayAccordingToMoodLevel(); // generate the display
             } else if ((differenceDaysInMillis) > sevenDaysInMillis) {
-                System.out.println("Coucou je fais plus de 7 jours");
-                //   resetAndSaveData();
+                resetAndSaveData();
                 levelOfMood = 3; // After save, reset the default screen
                 generateDisplayAccordingToMoodLevel(); // generate the display
             }
@@ -266,9 +270,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void saveDataForOneDay() {
         final Calendar c = Calendar.getInstance();
         lastDay = c.get(Calendar.DAY_OF_MONTH) - 1;
-        mDataHistory = mDataHistory + "/" + lastDay + "," + levelOfMood + ", " + comment;
+        mDataHistory = mDataHistory + "/" + lastDate + "," + levelOfMood + ", " + comment;
         lastDate = nowDate;
-        // manageEighthDayAndMore();
+        manageEighthDayAndMore();
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = ""; // reset comment after each save
     }
@@ -278,21 +282,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         long differenceDaysInMillis = nowDate - lastDate;
         dayNumber = (int) ((differenceDaysInMillis) / oneDayInMillis);
         lastDay = (c.get(Calendar.DAY_OF_MONTH) - dayNumber);
-        //System.out.println("nowDate - lastDate = " + (nowDate - lastDate));
+
         for (int i = 0; i <= dayNumber - 1; i++) {
             lastDate = lastDate + oneDayInMillis;
-            mDataHistory = mDataHistory + "/" + lastDay + "," + defaultMoodLevel + ", ";
+            mDataHistory = mDataHistory + "/" + lastDate + "," + defaultMoodLevel + ", ";
             lastDay++;
         }
         lastDate = nowDate;
-        //  manageEighthDayAndMore();
+        manageEighthDayAndMore();
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = ""; // reset comment after each save
     }
 
     private void resetAndSaveData() {
         mDataHistory = "";
-       // System.out.println(" TOUT RESEEEEEEETTTTTTT !!");
         lastDate = nowDate;
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = "";
@@ -307,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 part[i] = "";
             }
             mDataHistory = "";
-        //    System.out.println("   §§§§§§§§§§§§§§§§§§§§§ TOUT RESET");
+
             for (int i = dayNumberToDelete + 1; i <= (dayNumberToDelete + 7); i++) {
                 mDataHistory = mDataHistory + "/" + part[i];
             }
@@ -341,6 +344,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             if (e1.getY() < e2.getY()) {
                 Log.d(DEBUG_TAG, "Up to Down swipe performed");
                 onSwipe(true);
+                // Save data in preference if app is destroyed before midnight
                 mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL_BIS, levelOfMood).apply();
                 mPreferences.edit().putString(PREF_KEY_COMMENT_BIS, comment).apply();
                 comment = ""; // reset comment to each swipe
@@ -348,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             if (e1.getY() > e2.getY()) {
                 Log.d(DEBUG_TAG, "Down to Up swipe performed");
                 onSwipe(false);
+                // Save data in preference if app is destroyed before midnight
                 mPreferences.edit().putInt(PREF_KEY_MOOD_LEVEL_BIS, levelOfMood).apply();
                 mPreferences.edit().putString(PREF_KEY_COMMENT_BIS, comment).apply();
                 comment = ""; // reset comment to each swipe
@@ -411,6 +416,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onDestroy() {
         super.onDestroy();
         System.out.println("HEY ! MainActivity : ON DESTROY LAUNCHED !");
+        System.out.println("DATA HISTORY IN ON DESTROY " + mDataHistory);
     }
 }
 
