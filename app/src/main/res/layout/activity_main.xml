@@ -2,10 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MyLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thomas.siadous.moodtracker.MainActivity"
-    android:id="@+id/relativeLayout2">
+    tools:context="com.thomas.siadous.moodtracker.MainActivity">
 
     <ImageView
         android:id="@+id/imageView_background"
@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:background="@color/light_sage"
         android:contentDescription="@string/image_view_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView_happy"

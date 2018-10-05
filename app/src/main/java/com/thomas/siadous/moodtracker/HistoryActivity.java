@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
@@ -32,6 +31,7 @@ public class HistoryActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        System.out.println("HEY ! HISTORY ACTIVITY : ON CREATE LAUNCHED !");
         this.layoutHistory = findViewById(R.id.MyLayoutHistory);  // Reference layoutHistory
 
         mPreference = getSharedPreferences(MainActivity.PREFERENCE_FILE, MODE_PRIVATE);
@@ -163,7 +163,7 @@ public class HistoryActivity extends AppCompatActivity  {
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("HEY ! MainActivity : ON START LAUNCHED !");
+        System.out.println("HEY ! HISTORY ACTIVITY : ON START LAUNCHED !");
     }
 
     @Override

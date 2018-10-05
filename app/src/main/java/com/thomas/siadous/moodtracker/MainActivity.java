@@ -27,20 +27,23 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
-    // VARIABLES
+    // THE DIFFERENT VARIABLES AND OBJECTS
     private ImageView imageViewBackground; // State ImageView for the background
     private ImageView imageViewSmiley; // State ImageView for the smiley
     private ImageButton imageButtonHistory; // State ImageButton to access to the mood history
     private ImageButton imageButtonComments; // State ImageButton to add comments
+
     private SharedPreferences mPreferences; // Use to store data
-    public final static String PREFERENCE_FILE = "PREFERENCE_FILE"; // Preference key
+    public final static String PREFERENCE_FILE = "PREFERENCE_FILE";
+    public final static String PREF_KEY = "PREF_KEY"; // key for data history
+    // if the app is destroyed before midnight, store data
     public final static String PREF_KEY_MOOD_LEVEL_BIS = "PREF_KEY_MOOD_LEVEL_BIS";
     public final static String PREF_KEY_COMMENT_BIS = "PREF_KEY_COMMENT_BIS";
-    public final static String PREF_KEY = "PREF_KEY"; // Preference key
+
     public int levelOfMood = 3; // On what mood we are positioned / 3 correspond default mood / ex : 4 = :D / 0 = :(
     final int defaultMoodLevel = 3; // moodLevel by default
-    int moodLevelBis;
-    String commentBis;
+    int moodLevelBis; // recover just moodLevel of preference
+    String commentBis; // recover just comment of preference
     private static final String DEBUG_TAG = "Gestures"; // constant FOR LOG
     final long oneDayInMillis = 86_400_000L; // constant one day in milliseconds
     final long twoDaysInMillis = 172_800_000L; // constant two days in milliseconds
@@ -65,12 +68,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     String dateFormat; // to store the day, the month, and the year
     String comment = ""; // To store comment
 
+
     // THE METHOD onCreate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("DATA HISTORY IN ON CREATE " + mDataHistory);
+        System.out.println("HEY ! mainActivity : ON CREATE LAUNCHED !");
         referenceElementLayout();
         mDetector = new GestureDetectorCompat(this, this); // Initiate the gesture detector
 
@@ -80,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             mDataHistory = mPreferences.getString(PREF_KEY, "null");
         }
 
-        addAValueToLastDateForTheFirstLaunch();
-        mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initiate the soundPool
+        addAValueToLastDateForTheFirstLaunch(); // When lastDate(in millis) equals zero
+        mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // initialize the soundPool
         referenceSound();
-        addToImageList();
-        moodLevelBis = mPreferences.getInt(PREF_KEY_MOOD_LEVEL_BIS, -1);
-        commentBis = mPreferences.getString(PREF_KEY_COMMENT_BIS, " ");
-        if (moodLevelBis != -1) {
+        addToImageList(); // add Smileys and background
+        moodLevelBis = mPreferences.getInt(PREF_KEY_MOOD_LEVEL_BIS, -1); // recover moodLevel after an on Destroy
+        commentBis = mPreferences.getString(PREF_KEY_COMMENT_BIS, " "); // recover comment after an onDestroy
+        if (moodLevelBis != -1) { // if something is present in moodLevelBis other the default value
             levelOfMood = moodLevelBis;
             comment = commentBis;
             generateDisplayAccordingToMoodLevel();
@@ -96,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void addAValueToLastDateForTheFirstLaunch() {
-        final Calendar c = Calendar.getInstance(); // Initiate Calendar
+        final Calendar c = Calendar.getInstance(); // Initialize Calendar
         nowDay = c.get(Calendar.DAY_OF_MONTH); // to store the day of the month
-        nowMonth = c.get(Calendar.MONTH) + 1;
-        nowYear = c.get(Calendar.YEAR);
+        nowMonth = c.get(Calendar.MONTH) + 1; // i don't know why + 1 otherwise is not the good month
+        nowYear = c.get(Calendar.YEAR); // store the year
         if (lastDate == 0) {
             lastDay = nowDay;
             final Calendar c6 = Calendar.getInstance(); // Initialize Calendar
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 alert.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        comment = editComment.getText().toString();
+                        comment = editComment.getText().toString(); // to store the comment
                         alert.setCancelable(true); // close dialog box
                     }
                 });
@@ -242,14 +246,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
 
-    // permit to register data in preferences
+    // DIFFERENT METHODS TO CHECK AND SAVE
+    // permit to check the differences of date
     private void checkDifferenceOfDays() {
         final Calendar c = Calendar.getInstance(); // Initialize Calendar
         nowDate = c.getTimeInMillis();                   // TEST
         long differenceDaysInMillis = nowDate - lastDate;
-        if (differenceDaysInMillis < oneDayInMillis) {
+       /* if (differenceDaysInMillis < oneDayInMillis) {
             System.out.println("Coucou je fais moins d'1 jour ");
-        }
+        } */
         if ((differenceDaysInMillis) >= oneDayInMillis && (differenceDaysInMillis) < twoDaysInMillis) {
             saveDataForOneDay();
             levelOfMood = 3; // After save, reset the default screen
@@ -317,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
     }
 
+
     // DIFFERENT METHODS OF GESTURE DETECTOR
     @Override
     public boolean onDown(MotionEvent event) {                                              // NOT USE
@@ -324,16 +330,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     @Override
-    public void onShowPress(MotionEvent event) { }                                    // NOT USE
+    public void onShowPress(MotionEvent event) {   // NOT USE
+    }
 
     @Override
-    public boolean onSingleTapUp(MotionEvent event) {  return true; }                       // NOT USE
+    public boolean onSingleTapUp(MotionEvent event) {    // NOT USE
+        return true;
+    }
 
     @Override
-    public boolean onScroll(MotionEvent event1, MotionEvent event2, float vX, float vY) { return true; }  // NOT USE
+    public boolean onScroll(MotionEvent event1, MotionEvent event2, float vX, float vY) {  // NOT USE
+        return true;
+    }
 
     @Override
-    public void onLongPress(MotionEvent event) {       }     // NOT USE
+    public void onLongPress(MotionEvent event) {     // NOT USE
+    }
 
     // onFling method : Permit the vertical swipe
     @Override
@@ -361,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return true;
     }
 
+
     // METHODS TO PLAY MOOD SOUNDS
     // Method who play the sound (COOL) corresponding to the super happy mood
     public void playCoolSuperHappySound(View view) {
@@ -387,6 +400,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mSoundPool.play(mBrokenGlassSadSoundID, 1.0f, 1.0f, 0, 0, 1.0f);
     }
 
+
+    // LIFE CYCLE
     @Override
     protected void onStart() {
         super.onStart();
@@ -416,7 +431,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onDestroy() {
         super.onDestroy();
         System.out.println("HEY ! MainActivity : ON DESTROY LAUNCHED !");
-        System.out.println("DATA HISTORY IN ON DESTROY " + mDataHistory);
     }
 }
 
