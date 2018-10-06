@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     final long oneDayInMillis = 86_400_000L; // constant one day in milliseconds
     final long twoDaysInMillis = 172_800_000L; // constant two days in milliseconds
     final long sevenDaysInMillis = 604_800_000L; // constant seven days in milliseconds
-    long lastDate; // last date in milliseconds
-    long nowDate; // now date in milliseconds
+    long lastDateInMillis; // last date in milliseconds
+    long nowDateInMillis; // now date in milliseconds
     private GestureDetectorCompat mDetector; // For swipe
     int mCoolSuperHappySoundID; // Sound id for super happy mood
     int mCatHappySoundID; // Sound id for happy mood
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (moodLevelBis != -1) { // if something is present in moodLevelBis other the default value
             levelOfMood = moodLevelBis;
             comment = commentBis;
-            generateDisplayAccordingToMoodLevel();
+            generateDisplayAccordingTheMoodLevel();
         }
         launchHistory();
         manageAlertDialog();
@@ -104,10 +104,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         nowDay = c.get(Calendar.DAY_OF_MONTH); // to store the day of the month
         nowMonth = c.get(Calendar.MONTH) + 1; // i don't know why + 1 otherwise is not the good month
         nowYear = c.get(Calendar.YEAR); // store the year
-        if (lastDate == 0) {
+        if (lastDateInMillis == 0) {
             lastDay = nowDay;
             final Calendar c6 = Calendar.getInstance(); // Initialize Calendar
-            nowDate = c6.getTimeInMillis();
+            nowDateInMillis = c6.getTimeInMillis();
             dateFormat = lastDay + "-" + nowMonth + "-" + nowYear;
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             Date date = null;
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            lastDate = date.getTime();
+            lastDateInMillis = date.getTime();
         }
     }
 
@@ -204,18 +204,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public void onSwipe(Boolean isUp) {
         if (isUp) {
             if (levelOfMood <= 4 && levelOfMood > 0) {
+                //swipe up to down
                 levelOfMood--;
-                generateDisplayAccordingToMoodLevel();
+                generateDisplayAccordingTheMoodLevel();
             }
         } else {
             if (levelOfMood < 4 && levelOfMood >= 0) {
+                // swipe down to up
                 levelOfMood++;
-                generateDisplayAccordingToMoodLevel();
+                generateDisplayAccordingTheMoodLevel();
             }
         }
     }
 
-    private void generateDisplayAccordingToMoodLevel() {
+    private void generateDisplayAccordingTheMoodLevel() {
         switch (levelOfMood) {
             case 4:
                 imageViewSmiley.setImageResource(imageList.get(0));     // super happy
@@ -250,50 +252,50 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     // permit to check the differences of date
     private void checkDifferenceOfDays() {
         final Calendar c = Calendar.getInstance(); // Initialize Calendar
-        nowDate = c.getTimeInMillis();                   // TEST
-        long differenceDaysInMillis = nowDate - lastDate;
+        nowDateInMillis = c.getTimeInMillis();                   // TEST
+        long differenceBetweenLastDateAndNowDateInMillis = nowDateInMillis - lastDateInMillis;
        /* if (differenceDaysInMillis < oneDayInMillis) {
             System.out.println("Coucou je fais moins d'1 jour ");
         } */
-        if ((differenceDaysInMillis) >= oneDayInMillis && (differenceDaysInMillis) < twoDaysInMillis) {
-            saveDataForOneDay();
+        if ((differenceBetweenLastDateAndNowDateInMillis) >= oneDayInMillis && (differenceBetweenLastDateAndNowDateInMillis) < twoDaysInMillis) {
+            saveOneDayMore();
             levelOfMood = 3; // After save, reset the default screen
-            generateDisplayAccordingToMoodLevel(); // generate the display
+            generateDisplayAccordingTheMoodLevel(); // generate the display
         } else {
-            if ((differenceDaysInMillis) > oneDayInMillis && (differenceDaysInMillis) <= sevenDaysInMillis) {
-                saveDataForMoreOneDayAndLessSevenDays();
+            if ((differenceBetweenLastDateAndNowDateInMillis) > oneDayInMillis && (differenceBetweenLastDateAndNowDateInMillis) <= sevenDaysInMillis) {
+                saveBetweenTwoAndSevenDaysMore();
                 levelOfMood = 3; // After save, reset the default screen
-                generateDisplayAccordingToMoodLevel(); // generate the display
-            } else if ((differenceDaysInMillis) > sevenDaysInMillis) {
+                generateDisplayAccordingTheMoodLevel(); // generate the display
+            } else if ((differenceBetweenLastDateAndNowDateInMillis) > sevenDaysInMillis) {
                 resetAndSaveData();
                 levelOfMood = 3; // After save, reset the default screen
-                generateDisplayAccordingToMoodLevel(); // generate the display
+                generateDisplayAccordingTheMoodLevel(); // generate the display
             }
         }
     }
 
-    private void saveDataForOneDay() {
+    private void saveOneDayMore() {
         final Calendar c = Calendar.getInstance();
         lastDay = c.get(Calendar.DAY_OF_MONTH) - 1;
-        mDataHistory = mDataHistory + "/" + lastDate + "," + levelOfMood + ", " + comment;
-        lastDate = nowDate;
+        mDataHistory = mDataHistory + "/" + lastDateInMillis + "," + levelOfMood + ", " + comment;
+        lastDateInMillis = nowDateInMillis;
         manageEighthDayAndMore();
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = ""; // reset comment after each save
     }
 
-    private void saveDataForMoreOneDayAndLessSevenDays() {
+    private void saveBetweenTwoAndSevenDaysMore() {
         final Calendar c = Calendar.getInstance();
-        long differenceDaysInMillis = nowDate - lastDate;
+        long differenceDaysInMillis = nowDateInMillis - lastDateInMillis;
         dayNumber = (int) ((differenceDaysInMillis) / oneDayInMillis);
         lastDay = (c.get(Calendar.DAY_OF_MONTH) - dayNumber);
 
         for (int i = 0; i <= dayNumber - 1; i++) {
-            lastDate = lastDate + oneDayInMillis;
-            mDataHistory = mDataHistory + "/" + lastDate + "," + defaultMoodLevel + ", ";
+            lastDateInMillis = lastDateInMillis + oneDayInMillis;
+            mDataHistory = mDataHistory + "/" + lastDateInMillis + "," + defaultMoodLevel + ", ";
             lastDay++;
         }
-        lastDate = nowDate;
+        lastDateInMillis = nowDateInMillis;
         manageEighthDayAndMore();
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = ""; // reset comment after each save
@@ -301,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private void resetAndSaveData() {
         mDataHistory = "";
-        lastDate = nowDate;
+        lastDateInMillis = nowDateInMillis;
         mPreferences.edit().putString(PREF_KEY, mDataHistory).apply();
         comment = "";
     }
